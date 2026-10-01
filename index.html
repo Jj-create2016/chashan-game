@@ -2,11 +2,27 @@
 <html lang="zh-CN">
 <head>
 <script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.10.11/cloudbase.full.js"></script>
+<head>
+<script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.10.11/cloudbase.full.js"></script>
 <script>
-  // 直接初始化，不需要 DOMContentLoaded，立刻执行
-  window.db = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' }).database();
-  console.log('✅ 腾讯云数据库已连接！');
+  // 初始化 CloudBase
+  window.app = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' });
+
+  // 自动执行匿名登录
+  (async function() {
+    try {
+      const auth = window.app.auth();
+      await auth.signInAnonymously();
+      window.db = window.app.database();
+      console.log('✅ 腾讯云匿名登录成功，数据库已连接！');
+    } catch (error) {
+      console.error('❌ 匿名登录失败:', error);
+    }
+  })();
 </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="...">
+<title>茶山奇遇 · 一叶一山河</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>茶山奇遇 · 一叶一山河</title>
