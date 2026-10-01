@@ -1,0 +1,3328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>茶山奇遇 · 一叶一山河</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:#0a1710;display:flex;justify-content:center;align-items:center;
+  min-height:100vh;color:#22301f;overflow:hidden}
+#phone{width:100%;max-width:430px;height:100vh;max-height:880px;position:relative;
+  overflow:hidden;background:#f6f2e7;box-shadow:0 0 70px rgba(0,0,0,.7)}
+@media(min-width:480px){#phone{border-radius:22px}}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+
+#screen-home{background:linear-gradient(180deg,#0d2a1e 0%,#16422f 40%,#2c6b4a 100%);
+  color:#eaf5ec;align-items:center;padding:18px 20px;overflow-y:auto}
+.home-hills{position:absolute;left:0;right:0;bottom:0;height:38%;pointer-events:none;opacity:.5;
+  background:radial-gradient(ellipse at 20% 100%,#0d2a1e 0 45%,transparent 46%),
+  radial-gradient(ellipse at 75% 100%,#0a2117 0 50%,transparent 51%)}
+.logo{width:78px;height:78px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:42px;font-weight:700;color:#0d2a1e;
+  background:radial-gradient(circle at 32% 28%,#d6f0a8,#7fbf6a 60%,#3f7d5a);
+  box-shadow:0 0 0 6px rgba(200,230,180,.14),0 12px 30px rgba(0,0,0,.4);
+  animation:breathe 3.4s ease-in-out infinite;z-index:2}
+@keyframes breathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-6px) scale(1.04)}}
+h1{font-size:28px;letter-spacing:6px;margin:12px 0 3px;text-shadow:0 3px 12px rgba(0,0,0,.5);z-index:2}
+.sub{font-size:11.5px;letter-spacing:3px;color:#9fc7ad;z-index:2}
+.tea-bar{display:flex;gap:10px;margin:14px 0 4px;z-index:2;flex-wrap:wrap;justify-content:center}
+.tea-bar span{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);
+  padding:6px 13px;border-radius:999px;font-size:12px;color:#cfe7d6}
+.tea-bar b{color:#ffe08a}
+.fest-chip{background:linear-gradient(135deg,#ffe9a8,#e6c35c)!important;
+  color:#3a2c05!important;font-weight:700;border:none!important;animation:breathe 2.4s infinite}
+
+.btn-main{width:100%;padding:16px;border:none;border-radius:16px;font-size:18px;font-weight:700;
+  letter-spacing:4px;color:#12301f;cursor:pointer;margin-top:12px;
+  background:linear-gradient(135deg,#ffe9a8,#e6c35c 55%,#c9a227);
+  box-shadow:0 8px 24px rgba(201,162,39,.35);transition:.15s;z-index:2}
+.btn-main:active{transform:scale(.97)}
+.btn-main:disabled{background:#d8d8d8;color:#999;box-shadow:none}
+
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;width:100%;margin-top:14px;z-index:2}
+.btn-tile{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 8px;
+  border-radius:15px;border:1px solid rgba(255,255,255,.13);cursor:pointer;
+  background:rgba(255,255,255,.07);color:#e2f2e7;font-size:12px;transition:.15s}
+.btn-tile:active{background:rgba(255,255,255,.16);transform:scale(.97)}
+.btn-tile i{font-style:normal;font-size:22px}
+.scenery{margin-top:16px;font-size:11px;color:#7fae90;letter-spacing:1px;text-align:center;
+  line-height:1.9;z-index:2}
+.scenery b{color:#b9dcc5}
+
+.topbar{display:flex;align-items:center;gap:10px;padding:11px 14px;
+  background:linear-gradient(180deg,#16422f,#1d5238);color:#eaf5ec;flex-shrink:0}
+.topbar .back{width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(255,255,255,.14);color:#eaf5ec;font-size:17px;line-height:1}
+.topbar .title{flex:1;font-size:14px;letter-spacing:2px;font-weight:600}
+.tea-chip{background:rgba(255,255,255,.14);padding:5px 11px;border-radius:999px;font-size:12.5px}
+.tea-chip b{color:#ffe08a}
+
+.scene{flex:1;position:relative;overflow:hidden}
+.tea-scene{background:linear-gradient(180deg,#bfe0c8 0%,#8fc79f 45%,#5fa878 100%)}
+.tea-scene::before{content:"";position:absolute;left:-10%;right:-10%;bottom:-8%;height:52%;
+  background:radial-gradient(ellipse at 30% 100%,rgba(255,255,255,.35),transparent 60%)}
+.tea-grid{position:absolute;top:0;left:0;right:0;bottom:0;z-index:2}
+.tree{position:absolute;width:25%;aspect-ratio:1;border-radius:50%;cursor:pointer;
+  background:radial-gradient(circle at 35% 28%,#b8e8b8,#5fa878 55%,#2a5c40);
+  box-shadow:0 6px 14px rgba(0,0,0,.22),inset 0 -6px 0 rgba(0,0,0,.15),
+    inset 0 5px 0 rgba(255,255,255,.2);
+  transition:transform .12s;user-select:none;pointer-events:auto;z-index:2}
+.tree:active{transform:scale(.93)}
+.tree:nth-child(1){top:2%;left:6%}
+.tree:nth-child(2){top:2%;left:37.5%}
+.tree:nth-child(3){top:2%;left:69%}
+.tree:nth-child(4){top:26%;left:4%}
+.tree:nth-child(5){top:26%;left:37.5%}
+.tree:nth-child(6){top:26%;left:71%}
+.tree:nth-child(7){top:50%;left:6%}
+.tree:nth-child(8){top:50%;left:37.5%}
+.tree:nth-child(9){top:50%;left:69%}
+.tree .cd{position:absolute;inset:0;border-radius:50%;background:rgba(20,30,20,.5);
+  opacity:0;transition:opacity .25s;pointer-events:none;z-index:5}
+.tree.cool .cd{opacity:1}
+.tree.cool{filter:grayscale(.5) brightness(.85)}
+.tree .leaf{position:absolute;font-size:26px;pointer-events:none;
+  transition:transform .55s ease-out,opacity .55s ease-out;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));z-index:3}
+.tree .leaf:nth-of-type(1){top:-6%;left:50%;transform:translateX(-50%) rotate(-15deg)}
+.tree .leaf:nth-of-type(2){top:8%;right:-8%;transform:rotate(25deg)}
+.tree .leaf:nth-of-type(3){bottom:8%;right:-8%;transform:rotate(-25deg)}
+.tree .leaf:nth-of-type(4){bottom:-6%;left:50%;transform:translateX(-50%) rotate(15deg)}
+.tree .leaf:nth-of-type(5){bottom:8%;left:-8%;transform:rotate(25deg)}
+.tree .leaf:nth-of-type(6){top:8%;left:-8%;transform:rotate(-25deg)}
+.tree .leaf:nth-of-type(7){top:50%;right:-10%;transform:translateY(-50%) rotate(0deg);font-size:22px}
+.tree .leaf:nth-of-type(8){top:50%;left:-10%;transform:translateY(-50%) rotate(0deg);font-size:22px}
+.tree .leaf.fly{transform:translateY(100px) rotate(360deg) scale(1.4);opacity:0}
+.tree .flower{position:absolute;font-size:15px;pointer-events:none;z-index:4;
+  animation:flowerSway 3s ease-in-out infinite;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
+.tree .flower:nth-of-type(7){top:-4%;right:-10%}
+.tree .flower:nth-of-type(8){bottom:-4%;left:-10%;animation-delay:1.5s}
+@keyframes flowerSway{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
+
+.connect-decor{position:absolute;font-size:22px;pointer-events:none;z-index:4;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.3));
+  animation:decorSway 3.5s ease-in-out infinite}
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.3));
+  animation:decorSway 3.5s ease-in-out infinite}
+
+.tree-trunk{position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:60px;height:60%;z-index:3;
+  background:linear-gradient(90deg,#3a2010,#7a5028 25%,#a07048 50%,#6a4828 75%,#2a1808);
+  border-radius:12px 12px 0 0;
+  box-shadow:inset -6px 0 12px rgba(0,0,0,.55),inset 6px 0 10px rgba(255,255,255,.08),
+    0 4px 12px rgba(0,0,0,.35)}
+.tree-trunk::before{content:'';position:absolute;bottom:78%;right:100%;
+  width:70px;height:12px;
+  background:linear-gradient(180deg,#7a5028,#3a2010);border-radius:6px;
+  transform:rotate(35deg);transform-origin:right center}
+.tree-trunk::after{content:'';position:absolute;bottom:78%;left:100%;
+  width:70px;height:12px;
+  background:linear-gradient(180deg,#7a5028,#3a2010);border-radius:6px;
+  transform:rotate(-35deg);transform-origin:left center}
+
+  .panel{flex-shrink:0;background:#f6f2e7;padding:12px 14px 15px;
+  border-top-left-radius:20px;border-top-right-radius:20px;margin-top:-18px;
+  position:relative;z-index:5;box-shadow:0 -6px 20px rgba(0,0,0,.12)}
+.house{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;
+  padding:11px 13px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.07);pointer-events:auto}
+.house:active{background:#f0f7f0}
+.house-icon{font-size:28px}
+.house-info{flex:1}
+.house-info b{font-size:14px}
+.bar{height:7px;border-radius:99px;background:#e3ece3;margin:6px 0 4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#7fbf6a,#3f7d5a);
+  transition:width .25s}
+.house-info small{font-size:10.5px;color:#7d8f80}
+.btn-next{width:100%;margin-top:11px;padding:14px;border:none;border-radius:14px;cursor:pointer;
+  font-size:15px;font-weight:700;letter-spacing:2px;color:#fff;
+  background:linear-gradient(135deg,#3f7d5a,#2a5c40);
+  box-shadow:0 6px 16px rgba(63,125,90,.35);transition:.15s;pointer-events:auto}
+.btn-next:active{transform:scale(.97)}
+
+.td-scene{flex:1;background:linear-gradient(180deg,#cfe6d5 0%,#a3cfb2 60%,#78b48e 100%);
+  display:flex;flex-direction:column;position:relative}
+.td-field{flex:1;position:relative;overflow:hidden}
+.slot-row{position:absolute;left:0;right:0;display:grid;
+  grid-template-columns:repeat(4,1fr);gap:8px;padding:0 12px;z-index:15;pointer-events:auto}
+.slot-row.top{top:36px}
+.slot-row.bottom{bottom:8px}
+.slot{aspect-ratio:1.35;border-radius:12px;border:2px dashed rgba(60,120,80,.4);
+  background:rgba(255,255,255,.28);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:22px;transition:.15s;position:relative;pointer-events:auto}
+.slot:active{transform:scale(.95)}
+.slot.filled{border-style:solid;border-color:rgba(60,120,80,.75);
+  background:linear-gradient(180deg,#e8f5e8,#c8e5c8)}
+.slot .lv-badge{position:absolute;bottom:2px;right:4px;font-size:9px;background:#3f7d5a;
+  color:#fff;padding:1px 5px;border-radius:99px;font-weight:700}
+.slot .my-badge{position:absolute;top:2px;left:4px;font-size:9px;background:#c9182b;
+  color:#ffe9a8;padding:1px 5px;border-radius:99px;font-weight:700}
+.td-grid{position:absolute;inset:8px;display:grid;
+  grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr)}
+.cell{margin:3px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;font-size:20px;user-select:none;
+  background:rgba(255,255,255,.14)}
+.cell.path{background:linear-gradient(180deg,#e0d2ac,#c9b98c);
+  box-shadow:inset 0 0 0 2px #a08a5c}
+.cell.start{background:linear-gradient(180deg,#7fbf6a,#3f7d5a);color:#fff;
+  font-weight:700;font-size:16px;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.cell.goal{background:linear-gradient(180deg,#ffd97a,#e6a020);font-size:26px}
+.cell.tower{background:rgba(255,255,255,.38);
+  box-shadow:inset 0 0 0 2px #7fa889;cursor:pointer}
+.cell.tower:active{transform:scale(.95)}
+.cell.tower.filled{background:linear-gradient(180deg,#eaf5ea,#c9e3cb);
+  box-shadow:inset 0 0 0 2px #3f7d5a}
+.cell .unit-icon{font-size:22px;line-height:1;z-index:2}
+.cell .lv-badge{position:absolute;bottom:2px;right:3px;font-size:9px;background:#3f7d5a;
+  color:#fff;padding:1px 5px;border-radius:99px;font-weight:700;z-index:3}
+.cell .my-badge{position:absolute;top:2px;left:3px;font-size:8.5px;background:#c9182b;
+  color:#ffe9a8;padding:1px 4px;border-radius:99px;font-weight:700;z-index:3}
+
+.td-road{position:absolute;top:50%;left:0;right:0;height:48px;transform:translateY(-50%);
+  background:linear-gradient(180deg,#d9c9a3,#b9a67c);
+  border-top:3px dashed #8d7c55;border-bottom:3px dashed #8d7c55;z-index:1}
+.td-goal{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:34px;
+  z-index:3;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+#monsterLayer{position:absolute;inset:8px;pointer-events:none;z-index:20}
+.monster{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;
+  width:36px;height:36px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;z-index:21;cursor:pointer}
+.monster .body{font-size:26px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25));transition:.08s}
+.monster.hurt .body{transform:scale(1.25) rotate(-8deg);filter:brightness(2)}
+.monster.boss .body{font-size:36px}
+.monster .hp{height:6px;background:rgba(0,0,0,.28);border-radius:99px;overflow:hidden;margin-bottom:2px}
+.monster .hp i{display:block;height:100%;width:100%;
+  background:linear-gradient(90deg,#ff8a5c,#e0453a);transition:width .12s}
+.evo-scene{flex:1;background:linear-gradient(180deg,#eef4fa 0%,#c8dce8 60%,#8fb8c8 100%);overflow-y:auto;padding:14px}
+.evo-tower{background:linear-gradient(135deg,#ffe9a8,#e6c35c 55%,#c9a227);
+  color:#3a2c05;border-radius:18px;padding:16px;
+  box-shadow:0 8px 22px rgba(201,162,39,.4),inset 0 -4px 0 rgba(0,0,0,.12)}
+.evo-tower .tt{font-size:16px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.evo-tower .lv{font-size:12px;opacity:.85;margin-bottom:10px}
+.evo-tower .desc{font-size:11.5px;line-height:1.7;color:#5a4820;margin-bottom:10px}
+.evo-tower button{width:100%;padding:11px;border:none;border-radius:12px;cursor:pointer;
+  background:linear-gradient(135deg,#3f7d5a,#2a5c40);color:#fff;
+  font-size:13px;font-weight:700;letter-spacing:1px;
+  box-shadow:0 4px 12px rgba(42,92,64,.35);transition:.15s;pointer-events:auto}
+.evo-tower button:active{transform:scale(.97)}
+.evo-tower button:disabled{background:#b8b8a8;color:#e0e0d8;box-shadow:none;cursor:not-allowed}
+.evo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.evo-card{background:#fff;border-radius:14px;padding:10px 6px;cursor:pointer;text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);transition:.15s;user-select:none;pointer-events:auto}
+.evo-card:active{transform:scale(.94)}
+.evo-card .ic{font-size:24px;line-height:1}
+.evo-card .nm{font-size:11px;color:#3a5544;margin-top:4px;font-weight:600}
+.evo-card .el{font-size:10px;color:#c9a227;font-weight:700;margin-top:2px}
+.evo-card.locked{opacity:.45}
+
+.char-evo-detail{text-align:center;padding:6px 0}
+.char-evo-detail .big-icon{font-size:56px;line-height:1;margin-bottom:6px}
+.char-evo-detail .cname{font-size:16px;font-weight:700;color:#1c4634;margin-bottom:4px}
+.char-evo-detail .clv{font-size:13px;color:#c9a227;font-weight:700;margin-bottom:14px}
+.evo-skill-box{background:#fff8e2;border-radius:12px;padding:12px;margin-bottom:12px;text-align:left}
+.evo-skill-box h4{font-size:13px;color:#7a4a05;margin-bottom:6px}
+.evo-skill-box p{font-size:11.5px;color:#5a4820;line-height:1.7}
+.talent-card{border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;text-align:left;
+  transition:.15s;pointer-events:auto}
+.talent-card:active{transform:scale(.97)}
+.talent-card .tr{font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.talent-card .tn{font-size:14px;font-weight:700;margin-bottom:4px}
+.talent-card .td{font-size:11.5px;line-height:1.6;opacity:.85}
+.talent-white{background:#fff;color:#3a5544;border:2px solid #d8e5da}
+.talent-green{background:#e8f5e8;color:#2a5c40;border:2px solid #7fbf6a}
+.talent-blue{background:#e0eaff;color:#1c3a6a;border:2px solid #6a90d0}
+.talent-purple{background:linear-gradient(135deg,#f0e0ff,#d8b0f0);color:#4a1a6a;border:2px solid #9a5ad4}
+.talent-gold{background:linear-gradient(135deg,#ffe9a8,#e6c35c);color:#5a3a05;border:2px solid #c9a227}
+.talent-rainbow{background:linear-gradient(135deg,#ffd0d0,#ffe9a8,#c8f0c8,#c8e0ff,#e0c8f0);
+  color:#3a2c05;border:2px solid #e6a020}
+
+.lv-scene{flex:1;background:linear-gradient(180deg,#eef4fa 0%,#c8dce8 60%,#8fb8c8 100%);overflow-y:auto;padding:12px}
+.chapter-tabs{display:flex;gap:8px;margin-bottom:12px}
+.chapter-tabs button{flex:1;padding:10px 6px;border:none;border-radius:12px;font-size:12.5px;
+  font-weight:600;cursor:pointer;background:#e2e9e0;color:#5a6b5c;transition:.15s}
+.chapter-tabs button.on{background:linear-gradient(135deg,#7fb8e0,#2a5f8a);color:#fff;
+  box-shadow:0 4px 12px rgba(42,95,138,.3)}
+.chapter-tabs button.locked{opacity:.5;cursor:not-allowed}
+.chapter-title{font-size:13px;color:#3a5544;margin-bottom:10px;padding:0 2px;font-weight:600}
+.level-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.lv-cell{aspect-ratio:1;border-radius:12px;background:#fff;cursor:pointer;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;font-size:14px;
+  font-weight:700;color:#3a5544;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:.15s;
+  position:relative;user-select:none}
+.lv-cell:active{transform:scale(.94)}
+.lv-cell.locked{background:#d8e0d8;color:#9aa89b;cursor:not-allowed}
+.lv-cell.cleared{background:linear-gradient(135deg,#a8e6b8,#4f9a68);color:#fff}
+.lv-cell.boss{background:linear-gradient(135deg,#ffd97a,#c9182b);color:#fff}
+.lv-cell.boss.locked{background:#c8c0b8;color:#9a9088}
+.lv-cell.current{box-shadow:0 0 0 3px #e6a020}
+.lv-cell .star{position:absolute;top:2px;right:4px;font-size:9px}
+.lv-cell .boss-tag{position:absolute;bottom:2px;font-size:9px;color:#fff;font-weight:700}
+.lv-cell.boss .boss-tag{color:#fff}
+
+#festDecor{position:absolute;inset:0;pointer-events:none;z-index:14;overflow:hidden}
+.moon-deco{position:absolute;top:6%;left:50%;margin-left:-32px;width:64px;height:64px;
+  border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff8d0,#f5e070 60%,#e6c245);
+  box-shadow:0 0 30px rgba(255,240,160,.75),0 0 60px rgba(255,240,160,.4);
+  display:flex;align-items:center;justify-content:center;font-size:34px;
+  animation:moonSpin 12s linear infinite}
+@keyframes moonSpin{
+  0%{transform:rotate(0deg) scale(1)}
+  50%{transform:rotate(180deg) scale(1.08)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+.mooncake-drop{position:absolute;top:-50px;font-size:30px;animation:mooncakeFall 7s linear infinite}
+@keyframes mooncakeFall{
+  0%{top:-50px;transform:rotate(0deg);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{top:105%;transform:rotate(360deg);opacity:0}
+}
+.fest-flag{position:absolute;font-size:36px;animation:breathe 2s ease-in-out infinite}
+.fest-lantern{position:absolute;top:-4px;font-size:36px;animation:lanternSway 3s ease-in-out infinite}
+@keyframes lanternSway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+
+.td-bottom{flex-shrink:0;background:#f6f2e7;padding:10px 12px 14px;
+  border-top-left-radius:18px;border-top-right-radius:18px;
+  box-shadow:0 -6px 20px rgba(0,0,0,.12);position:relative;z-index:6}
+.td-status{display:flex;justify-content:space-between;font-size:11.5px;color:#456a52;
+  margin-bottom:8px;padding:0 2px}
+.td-status b{color:#1c4634}
+.hand-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.hand-row::-webkit-scrollbar{display:none}
+.hand-card{flex-shrink:0;width:62px;padding:7px 3px;border-radius:11px;border:2px solid #d8e5da;
+  background:#fff;cursor:pointer;text-align:center;transition:.15s;user-select:none;pointer-events:auto}
+.hand-card:active{transform:scale(.95)}
+.hand-card.sel{border-color:#e6a020;background:#fff8e2;box-shadow:0 0 0 3px rgba(230,160,32,.2)}
+.hand-card.dis{opacity:.38}
+.hand-card.myth{border-color:#c9182b;background:linear-gradient(180deg,#fff6d9,#ffeab0)}
+.hand-card .ic{font-size:20px;line-height:1}
+.hand-card .nm{font-size:9.5px;color:#3a5544;margin-top:2px;font-weight:600}
+.hand-card .cost{font-size:9.5px;color:#b8791a;font-weight:700}
+
+#modal{position:absolute;inset:0;background:rgba(8,22,15,.72);display:none;
+  align-items:center;justify-content:center;padding:22px;z-index:100;backdrop-filter:blur(3px)}
+#modal.show{display:flex}
+.modal-card{width:100%;max-height:82%;overflow-y:auto;background:#f6f2e7;border-radius:20px;
+  padding:20px 17px;position:relative;animation:pop .22s ease}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-close{position:absolute;top:11px;right:12px;width:28px;height:28px;border-radius:50%;
+  border:none;background:#e2e9e0;color:#5a6b5c;font-size:17px;cursor:pointer;line-height:1;pointer-events:auto}
+.modal-card h3{font-size:16px;margin-bottom:12px;letter-spacing:1px;color:#1c4634}
+.tip{font-size:11.5px;color:#83978a;margin-bottom:13px;line-height:1.7}
+
+.char-row{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;
+  padding:11px;margin-bottom:9px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.char-big{width:44px;height:44px;flex-shrink:0;border-radius:12px;display:flex;
+  align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#4f9a68,#2a5c40)}
+.char-big.fest{background:linear-gradient(135deg,#e6a020,#c9182b)}
+.char-big.myth{background:linear-gradient(135deg,#c9182b,#7a1010);font-size:22px}
+.char-levels{flex:1;display:flex;flex-wrap:wrap;gap:4px}
+.lv{font-size:10.5px;background:#e8f3e9;color:#2a5c40;padding:3px 7px;border-radius:99px;
+  font-weight:600}
+.lv.empty{background:#f0eee8;color:#9aa89b;font-weight:400}
+.char-btns{display:flex;flex-direction:column;gap:4px}
+.char-btns button{border:none;border-radius:8px;padding:5px 9px;font-size:11px;cursor:pointer;
+  background:#e6c35c;color:#3a2c05;font-weight:600;pointer-events:auto}
+.char-btns button:nth-child(2){background:#a8d5ff;color:#0d3a5c}
+.char-btns button:nth-child(3){background:#ffc9a8;color:#5c2a0d}
+
+.rank-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:12px;
+  background:#fff;margin-bottom:8px;font-size:13.5px}
+.rank-item.me{background:linear-gradient(90deg,#fff6d9,#ffeab0);font-weight:700}
+.rank-no{width:24px;text-align:center;font-weight:700;color:#a8905a}
+.rank-name{flex:1}
+
+.shop-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;
+  padding:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.shop-icon{font-size:28px}
+.shop-info{flex:1}
+.shop-info b{font-size:13.5px}
+.shop-info p{font-size:11px;color:#83978a;margin-top:3px}
+.shop-buy{border:none;border-radius:10px;padding:9px 13px;font-size:12px;cursor:pointer;
+  font-weight:700;background:linear-gradient(135deg,#ffe9a8,#e6c35c);color:#3a2c05;white-space:nowrap;pointer-events:auto}
+.shop-buy:disabled{background:#e4e4e4;color:#aaa}
+
+.sign-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.sign-day{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;font-size:10px;
+  background:#eae5d8;color:#9aa89b}
+.sign-day.done{background:linear-gradient(135deg,#4f9a68,#2a5c40);color:#fff}
+.sign-day span{font-size:16px}
+
+.ad{text-align:center;padding:34px 0;font-size:15px;color:#456a52}
+.ad b{font-size:30px;color:#c9a227;display:block;margin-top:10px}
+
+.celebrate{text-align:center}
+.celebrate .big{font-size:56px;margin-bottom:8px;animation:breathe 1.4s infinite}
+.celebrate p{font-size:12.5px;color:#5f7364;line-height:1.9;margin:10px 0 16px}
+.celebrate .fest-tag{display:inline-block;background:linear-gradient(135deg,#e6a020,#c9182b);
+  color:#fff;padding:4px 14px;border-radius:99px;font-size:11.5px;font-weight:700;margin-bottom:8px}
+
+.quiz-opt{width:100%;margin-bottom:9px;text-align:left;padding:13px 14px;border:none;
+  border-radius:12px;background:#dcecdf;font-size:13.5px;color:#1c4634;cursor:pointer;
+  font-weight:600;transition:.15s;pointer-events:auto}
+.quiz-opt:active{transform:scale(.98);background:#cfe4d4}
+.quiz-opt.right{background:#a8e6b8!important;color:#0d4a1c!important}
+.quiz-opt.wrong{background:#f5c0c0!important;color:#7a1010!important}
+
+.toast{position:fixed;left:50%;top:16%;transform:translateX(-50%);
+  background:rgba(20,45,32,.94);color:#e8f5ea;padding:11px 20px;border-radius:99px;
+  font-size:13px;z-index:999;pointer-events:none;animation:toastIn .3s ease;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);white-space:nowrap;max-width:88vw;overflow:hidden;
+  text-overflow:ellipsis}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
+
+.float{position:fixed;pointer-events:none;font-size:15px;font-weight:700;color:#2a5c40;
+  text-shadow:0 1px 3px rgba(255,255,255,.9);z-index:900;animation:floatUp .9s ease-out forwards}
+@keyframes floatUp{to{transform:translateY(-48px);opacity:0}}
+
+.fest-badge{background:linear-gradient(135deg,#ffe9a8,#e6c35c);color:#7a4a05;font-size:10px;
+  padding:3px 9px;border-radius:99px;margin-left:6px;font-weight:700}
+.myth-badge{background:linear-gradient(135deg,#c9182b,#7a1010);color:#ffe9a8;font-size:10px;
+  padding:3px 9px;border-radius:99px;margin-left:6px;font-weight:700}
+
+.hp-bar{position:absolute;left:12px;top:8px;background:rgba(255,255,255,.85);
+  padding:5px 11px;border-radius:99px;font-size:12px;color:#3a5544;z-index:5;
+  box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.hp-bar b{color:#c9182b}
+</style>
+</head>
+<body>
+<div id="phone">
+
+<section id="screen-home" class="screen active">
+  <div class="home-hills"></div>
+  <div class="logo">茶</div>
+  <h1>茶山奇遇</h1>
+  <p class="sub">一叶一茶山 · 一字一山河</p>
+  <div class="tea-bar">
+    <span>🍃 茶叶 <b id="homeTea">0</b></span>
+    <span>🏆 最高波次 <b id="homeBest">0</b></span>
+    <span id="festChip" class="fest-chip" style="display:none"></span>
+  </div>
+  <button type="button" class="btn-main" id="btnStart">🍃 采茶模式</button>
+  <button type="button" class="btn-main" id="btnAdventure" style="margin-top:8px;background:linear-gradient(135deg,#7fb8e0,#2a5f8a);color:#fff;box-shadow:0 8px 24px rgba(42,95,138,.35)">🗺️ 闯关模式</button>
+  <div class="home-grid">
+    <button type="button" class="btn-tile" id="btnRank"><i>🏅</i><span>排行榜</span></button>
+    <button type="button" class="btn-tile" id="btnShop"><i>🎒</i><span>商店装备</span></button>
+    <button type="button" class="btn-tile" id="btnSign"><i>📅</i><span>每日签到</span></button>
+    <button type="button" class="btn-tile" id="btnBag"><i>🀄</i><span>字库·兵营</span></button>
+	<button type="button" class="btn-tile" id="btnReset" style="background:rgba(255,90,90,.12);border-color:rgba(255,120,120,.3);color:#ffb8b8"><i>🔄</i><span>重置</span></button>
+	<button type="button" class="btn-tile" id="btnEvo"><i>🔮</i><span>塔之进化</span></button>
+    <button type="button" class="btn-tile" id="btnSave" style="background:rgba(120,180,255,.12);border-color:rgba(120,180,255,.3);color:#b8d4ff"><i>💾</i><span>存档码</span></button>
+  </div>
+  <div class="scenery">
+    <b>云雾茶山</b> · <b>云湖</b> · <b>飞瀑</b> · <b>原始森林</b><br>
+    采一叶春茶，集万古山河
+  </div>
+</section>
+
+<section id="screen-mountain" class="screen">
+  <div class="topbar">
+    <button type="button" class="back" id="btnBackHome">←</button>
+    <div class="title" id="mtTitle">第一站 · 云雾茶山</div>
+    <div class="tea-chip">🍃 <b class="tea-val">0</b></div>
+  </div>
+  <div class="scene tea-scene">
+    <div class="tree-trunk" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60px;height:55%;z-index:3;background:linear-gradient(90deg,#3a2010,#7a5028 25%,#a07048 50%,#6a4828 75%,#2a1808);border-radius:12px 12px 0 0;box-shadow:0 4px 12px rgba(0,0,0,.35)"></div>
+    <div class="tea-grid" id="teaGrid"></div>
+  </div>
+  <div class="panel">
+    <div class="house" id="houseBox">
+      <div class="house-icon">🏯</div>
+      <div class="house-info">
+        <b>山间茶楼 Lv.<span id="houseLv">0</span></b>
+        <div class="bar"><i id="houseBar"></i></div>
+        <small>投入 10 茶叶升级 · 每秒自动产茶（点击投入）</small>
+      </div>
+    </div>
+    <button type="button" class="btn-next" id="btnToPath">前往下一站 · 溪谷小径 →</button>
+  </div>
+</section>
+<section id="screen-evo" class="screen">
+  <div class="topbar">
+    <button type="button" class="back" id="btnBackFromEvo">←</button>
+    <div class="title">🔮 塔之进化</div>
+    <div class="tea-chip">🍃 <b class="tea-val">0</b></div>
+  </div>
+  <div class="evo-scene">
+    <div id="evoTowerCard"></div>
+    <h3 style="font-size:13px;margin:16px 0 8px;color:#456a52;font-weight:600">🍵 字·进化</h3>
+    <div class="evo-grid" id="evoGrid"></div>
+  </div>
+</section>
+
+<section id="screen-levels" class="screen">
+  <div class="topbar">
+    <button type="button" class="back" id="btnBackFromLevels">←</button>
+    <div class="title">闯关模式</div>
+    <div class="tea-chip">🍃 <b class="tea-val">0</b></div>
+  </div>
+  <div class="lv-scene">
+    <div class="chapter-tabs" id="chapterTabs"></div>
+    <div class="chapter-title" id="chapterTitle"></div>
+    <div class="level-grid" id="levelGrid"></div>
+  </div>
+</section>
+<section id="screen-path" class="screen">
+  <div class="topbar">
+    <button type="button" class="back" id="btnBackMountain">←</button>
+    <div class="title">第二站 · 溪谷小径</div>
+    <div class="tea-chip">🍃 <b class="tea-val">0</b></div>
+  </div>
+<div class="td-scene">
+    <div class="td-field">
+      <div class="hp-bar">茶楼 ❤️ <b id="baseHp">10</b>/10</div>
+      <div class="td-grid" id="tdGrid"></div>
+      <div id="monsterLayer"></div>
+		<div id="festDecor"></div>
+    </div>
+    <div class="td-bottom">
+      <div class="td-status">
+        <span>第 <b id="waveNum">1</b> 波</span>
+       <span>本波 <b id="waveKillNum">0</b>/<b id="waveTargetNum">8</b></span>
+        <span>茶灵 <b id="unitNum">0</b></span>
+      </div>
+		<button type="button" id="btnFestMission" style="width:100%;margin-bottom:8px;padding:10px;border:none;border-radius:12px;background:#bbb;color:#fff;font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer">🎊 节日任务</button>
+		<div style="display:flex;gap:8px;margin-bottom:8px">
+        <button type="button" id="btnManualSave" style="flex:1;padding:10px;border:none;border-radius:12px;background:linear-gradient(135deg,#7fb8e0,#2a5f8a);color:#fff;font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer">💾 存档</button>
+        <button type="button" id="btnBackHome2" style="flex:1;padding:10px;border:none;border-radius:12px;background:linear-gradient(135deg,#ff8a8a,#c9182b);color:#fff;font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer">🏠 返回主页</button>
+      </div>
+
+      <div class="hand-row" id="handRow"></div>
+    </div>
+  </div>
+</section>
+
+<div id="modal">
+  <div class="modal-card">
+    <button type="button" class="modal-close" id="btnCloseModal">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* ============================================================
+   茶山奇遇 · 主逻辑
+   所有交互使用 addEventListener，不再依赖内联 onclick
+   ============================================================ */
+
+/* ---------- 节日系统 ---------- */
+const LUNAR_MAP={
+  2024:['2024-02-10','2024-02-24','2024-06-10','2024-08-10','2024-09-17','2024-10-11'],
+  2025:['2025-01-29','2025-02-12','2025-05-31','2025-08-29','2025-10-06','2025-10-29'],
+2026:['2026-02-17','2026-03-03','2026-06-19','2026-08-19','2026-09-25','2026-10-18'],
+  2027:['2027-02-06','2027-02-20','2027-06-09','2027-08-08','2027-09-15','2027-10-08'],
+  2028:['2028-01-26','2028-02-09','2028-05-28','2028-07-27','2028-10-03','2028-10-26'],
+  2029:['2029-02-13','2029-02-27','2029-06-16','2029-08-16','2029-09-22','2029-10-15'],
+  2030:['2030-02-03','2030-02-17','2030-06-05','2030-08-05','2030-09-12','2030-10-05']
+};
+function pad2(n){return String(n).padStart(2,'0');}
+function todayStr(){const d=new Date();
+  return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+function addDays(ds,n){const d=new Date(ds+'T00:00:00');d.setDate(d.getDate()+n);
+  return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+function between(t,s,e){return t>=s&&t<=e;}
+
+const FESTIVALS=[
+  {id:'newyear',name:'元旦',emoji:'🎊',chars:['元','旦','新','年'],color:'#4a7fc9',
+   check:function(y,m,d){return m===1&&d>=1&&d<=3;}},
+  {id:'spring',name:'春节',emoji:'🏮',chars:['春','节','拜','年'],color:'#c9182b',
+   check:function(y){const r=LUNAR_MAP[y];if(!r)return false;
+     return between(todayStr(),r[0],addDays(r[0],6));}},
+  {id:'lantern',name:'元宵节',emoji:'🏮',chars:['元','宵','灯','圆'],color:'#e07a2a',
+   check:function(y){const r=LUNAR_MAP[y];if(!r)return false;
+     return between(todayStr(),addDays(r[1],-1),addDays(r[1],1));}},
+  {id:'qingming',name:'清明节',emoji:'🌿',chars:['清','明','祭','念'],color:'#5aa87a',
+   check:function(y,m,d){return m===4&&d>=4&&d<=6;}},
+  {id:'labour',name:'劳动节',emoji:'🔧',chars:['劳','动','光','荣'],color:'#c95a2a',
+   check:function(y,m,d){return m===5&&d>=1&&d<=5;}},
+  {id:'dragon',name:'端午节',emoji:'🎋',chars:['端','午','粽','艾'],color:'#2a8a5a',
+   check:function(y){const r=LUNAR_MAP[y];if(!r)return false;
+     return between(todayStr(),addDays(r[2],-1),addDays(r[2],1));}},
+  {id:'qixi',name:'七夕',emoji:'💫',chars:['七','夕','鹊','桥'],color:'#d45a9a',
+   check:function(y){const r=LUNAR_MAP[y];if(!r)return false;
+     return between(todayStr(),addDays(r[3],-1),addDays(r[3],1));}},
+  {id:'midautumn',name:'中秋节',emoji:'🥮',chars:['中','秋','月','圆'],color:'#d4a02a',
+   check:function(y){const r=LUNAR_MAP[y];if(!r)return false;
+     return between(todayStr(),addDays(r[4],-1),addDays(r[4],1));}},
+  {id:'national',name:'国庆节',emoji:'🇨🇳',chars:['国','庆','节','快','乐'],color:'#c9182b',
+   check:function(y,m,d){return m===10&&d>=1&&d<=7;}},
+  {id:'double9',name:'重阳节',emoji:'🌼',chars:['重','阳','菊','寿'],color:'#c98a2a',
+   check:function(y){const r=LUNAR_MAP[y];if(!r)return false;
+     return between(todayStr(),addDays(r[5],-1),addDays(r[5],1));}},
+  {id:'christmas',name:'圣诞节',emoji:'🎄',chars:['圣','诞','雪','礼'],color:'#c9182b',
+   check:function(y,m,d){return m===12&&d>=24&&d<=26;}}
+];
+function activeFestival(){
+  const now=new Date();
+  const y=now.getFullYear(),m=now.getMonth()+1,d=now.getDate();
+  for(let i=0;i<FESTIVALS.length;i++){if(FESTIVALS[i].check(y,m,d))return FESTIVALS[i];}
+  return null;
+}
+
+/* ---------- 常量 ---------- */
+const BASE_CHARS=['茶','绿','红','白','黑','青','黄','花','龙','普','蜜'];
+const MYTH_CHARS=['神','羽','仝','轼','娲','然','居','徽','清','真'];
+const FEST_CHARS=['元','旦','新','年','春','节','拜','宵','灯','圆','清','明','祭','念','劳','动','光','荣','端','午','粽','艾','七','夕','鹊','桥','中','秋','月','国','庆','快','乐','重','阳','菊','寿','圣','诞','雪','礼'];
+const ALL_CHARS=BASE_CHARS.concat(MYTH_CHARS,FEST_CHARS);
+const TREE_CD=3, TREE_COUNT=6, MAX_LV=9;
+
+const DROP_W={茶:20,绿:10,红:10,白:8,黑:8,青:8,黄:8,
+  花:6,龙:6,普:6,蜜:6,
+  神:1.5,羽:1.5,仝:1.5,轼:1.5,娲:1.2,然:1.5,居:1.5,徽:1.2,清:1.5,真:1.2};
+
+const UNIT_DEFS={
+  '茶':{icon:'🍃',name:'茶灵',cost:5,dmg:3,rate:1.5,range:16,type:'atk',sk:8,
+    skName:'茶息',skDesc:'为茶楼恢复 1 点生命'},
+  '绿':{icon:'🍵',name:'绿茶使',cost:14,dmg:0,rate:2.0,range:32,type:'heal',heal:1,sk:6,
+    skName:'生命之泉',skDesc:'为茶楼恢复约 3 点生命'},
+  '红':{icon:'🧧',name:'红茶卫',cost:16,dmg:9,rate:1.2,range:18,type:'atk',sk:10,
+    skName:'蓄力一击',skDesc:'下一击伤害翻倍'},
+  '白':{icon:'🌫️',name:'白茶师',cost:15,dmg:2,rate:1.5,range:32,type:'slow',sk:8,
+    skName:'寒霜入茶',skDesc:'全场怪物减速 2 秒'},
+  '黑':{icon:'🌑',name:'黑茶将',cost:26,dmg:7,rate:0.9,range:22,type:'aoe',sk:12,
+    skName:'浓香一击',skDesc:'对全场怪物造成一次伤害'},
+  '青':{icon:'💚',name:'青茶侠',cost:18,dmg:4,rate:2.5,range:16,type:'atk',sk:6,
+    skName:'疾风三连',skDesc:'对前方怪物连续攻击 3 次'},
+  '黄':{icon:'⭐',name:'黄茶仙',cost:26,dmg:14,rate:0.7,range:26,type:'crit',sk:10,
+    skName:'金光必暴',skDesc:'对最前一只怪物造成 3 倍暴击'},
+  '花':{icon:'🌸',name:'花茶使',cost:20,dmg:0,rate:1.6,range:36,type:'heal',heal:2,sk:10,
+    skName:'百花酿',skDesc:'茶楼恢复大量生命，全场减速'},
+  '龙':{icon:'🐉',name:'龙井客',cost:24,dmg:18,rate:0.6,range:32,type:'atk',sk:12,
+    skName:'龙吟一击',skDesc:'对进度最靠前的怪物造成 2.5 倍伤害'},
+  '普':{icon:'🫙',name:'普洱将',cost:28,dmg:8,rate:0.8,range:20,type:'aoe',sk:15,
+    skName:'陈香翻涌',skDesc:'对全场怪物造成范围伤害'},
+  '蜜':{icon:'🍯',name:'蜜茶师',cost:22,dmg:3,rate:2.4,range:20,type:'atk',sk:12,
+    skName:'甘蜜润军',skDesc:'全场塔攻速翻倍，持续 5 秒'},
+  '神':{icon:'🌾',name:'神农',cost:30,dmg:5,rate:1.0,range:24,type:'heal',heal:1,sk:12,
+    skName:'尝百草',skDesc:'茶楼恢复 2 点生命，全场小范围伤害'},
+  '羽':{icon:'📜',name:'陆羽',cost:36,dmg:22,rate:0.9,range:26,type:'atk',sk:10,
+    skName:'著《茶经》',skDesc:'全场塔伤害 +50%，持续 4 秒'},
+  '仝':{icon:'🍶',name:'卢仝',cost:32,dmg:6,rate:0.7,range:22,type:'aoe',sk:8,
+    skName:'七碗茶歌',skDesc:'全场怪物减速 2 秒'},
+  '轼':{icon:'🖋️',name:'苏轼',cost:30,dmg:12,rate:0.9,range:24,type:'crit',sk:10,
+    skName:'大江东去',skDesc:'对最前 2 只怪物造成 2 倍重击'},
+  '娲':{icon:'🌙',name:'女娲',cost:40,dmg:0,rate:0.16,range:99,type:'mature',sk:6,
+    skName:'五色补天',skDesc:'瞬间催熟所有茶树'},
+  '然':{icon:'🕯️',name:'皎然',cost:26,dmg:3,rate:1.5,range:28,type:'slow',sk:10,
+    skName:'禅定一击',skDesc:'对最前一只怪物造成 3 倍伤害并减速 2 秒'},
+  '居':{icon:'🌺',name:'白居易',cost:28,dmg:8,rate:1.1,range:24,type:'atk',sk:10,
+    skName:'长恨歌',skDesc:'对全场怪物造成范围伤害'},
+  '徽':{icon:'👑',name:'宋徽宗',cost:38,dmg:14,rate:0.7,range:26,type:'atk',sk:15,
+    skName:'御笔钦点',skDesc:'秒杀全场血量最低的怪物'},
+  '清':{icon:'💫',name:'李清照',cost:28,dmg:9,rate:1.3,range:30,type:'atk',sk:10,
+    skName:'词压江南',skDesc:'全场塔伤害 +50%，持续 4 秒'},
+  '真':{icon:'⛰️',name:'吴理真',cost:34,dmg:16,rate:0.8,range:24,type:'atk',sk:15,
+    skName:'蒙顶种茶',skDesc:'对全场怪物造成大范围伤害'},
+
+  /* === 节日专属 === */
+  '元':{icon:'🎊',name:'元旦钟',cost:28,dmg:4,rate:1.2,range:22,type:'atk',sk:12,
+    skName:'辞旧迎新',skDesc:'重置全场塔的技能冷却'},
+  '春':{icon:'🧨',name:'迎春使',cost:30,dmg:6,rate:1.0,range:24,type:'atk',sk:10,
+    skName:'爆竹迎春',skDesc:'全场怪物受伤害并后退 1 格'},
+  '灯':{icon:'🏮',name:'花灯使',cost:26,dmg:3,rate:1.5,range:26,type:'atk',sk:10,
+    skName:'灯火阑珊',skDesc:'全场怪物受伤 +50%，持续 6 秒'},
+  '明':{icon:'🕯️',name:'清明师',cost:28,dmg:5,rate:1.2,range:24,type:'slow',sk:10,
+    skName:'明镜高悬',skDesc:'全场减速 2 秒并对最前怪 3 倍伤害'},
+  '劳':{icon:'🔧',name:'劳动使',cost:28,dmg:5,rate:1.3,range:22,type:'atk',sk:12,
+    skName:'劳动号子',skDesc:'全场塔攻速 +100%，持续 6 秒'},
+  '粽':{icon:'🥮',name:'粽香使',cost:24,dmg:5,rate:1.5,range:22,type:'atk',sk:8,
+    skName:'粽叶飞梭',skDesc:'召唤粽子沿路径飞梭，撞击全场怪物'},
+  '鹊':{icon:'🐦',name:'鹊桥使',cost:26,dmg:4,rate:1.4,range:24,type:'atk',sk:10,
+    skName:'鹊桥相会',skDesc:'召唤喜鹊沿路径飞行，撞到的怪减速 2 秒'},
+  '月':{icon:'🌕',name:'月华使',cost:30,dmg:5,rate:1.2,range:24,type:'atk',sk:5,
+    skName:'月华三变',skDesc:'循环释放：月光普照 / 月兔奔月 / 引力潮汐'},
+  '国':{icon:'🇨🇳',name:'国运使',cost:32,dmg:6,rate:1.0,range:26,type:'atk',sk:15,
+    skName:'国泰民安',skDesc:'全场塔伤害 +100%，持续 8 秒'},
+  '菊':{icon:'🌼',name:'菊寿使',cost:30,dmg:5,rate:1.2,range:24,type:'atk',sk:15,
+    skName:'重阳登高',skDesc:'茶楼恢复 5 点生命并立即重置全场塔冷却'},
+  '雪':{icon:'❄️',name:'雪夜使',cost:30,dmg:4,rate:1.3,range:26,type:'atk',sk:12,
+    skName:'雪夜奇缘',skDesc:'全场怪物冻结 3 秒'}
+};
+
+const EQUIPS={
+  basket:{name:'竹编茶篓',icon:'🧺',desc:'每次采茶 +1 茶叶',base:30,inc:25},
+  pestle:{name:'茶木杵',icon:'🔨',desc:'塔防单位伤害 +15%',base:40,inc:35},
+  pot:{name:'陶茶壶',icon:'🫖',desc:'治疗单位治疗量 +1',base:50,inc:45}
+};
+
+
+const QUIZ_POOL=[
+  {q:'中国茶文化的"茶圣"是谁？',a:['陆羽','李白','苏轼','杜甫'],r:0},
+  {q:'《茶经》是世界上第一部茶学专著，作者是？',a:['陆羽','神农','卢仝','皎然'],r:0},
+  {q:'"茶"字最早大致出现在哪个朝代？',a:['汉代','唐代','宋代','明代'],r:1},
+  {q:'下列哪种属于不发酵茶？',a:['绿茶','红茶','黑茶','乌龙茶'],r:0},
+  {q:'"清明前后，______"，说的是采茶时节。',a:['种瓜点豆','栽桑养蚕','采茶忙','打谷场'],r:1},
+  {q:'高山云雾出好茶，主要因为云雾能？',a:['增加光照','减少湿气','调节温湿度','招来虫子'],r:2},
+  {q:'泡绿茶最适宜的水温大约是？',a:['100℃','80-85℃','60℃以下','越烫越好'],r:1},
+  {q:'红茶属于什么发酵程度的茶？',a:['不发酵','半发酵','全发酵','后发酵'],r:2},
+  {q:'乌龙茶（青茶）属于？',a:['不发酵','半发酵','全发酵','后发酵'],r:1},
+  {q:'普洱茶通常被归为哪一类？',a:['绿茶','红茶','黑茶','白茶'],r:2},
+  {q:'白茶的主要工艺是？',a:['炒青','揉捻','萎凋干燥','渥堆'],r:2},
+  {q:'"七碗茶歌"的作者是？',a:['陆羽','卢仝','苏轼','白居易'],r:1},
+  {q:'下列哪个不是中国四大茶区？',a:['江南茶区','江北茶区','西南茶区','东北茶区'],r:3},
+  {q:'龙井茶属于哪个省的著名绿茶？',a:['江苏','浙江','安徽','福建'],r:1},
+  {q:'碧螺春产于？',a:['杭州','苏州太湖','黄山','武夷山'],r:1},
+  {q:'铁观音属于？',a:['绿茶','红茶','乌龙茶','黑茶'],r:2},
+  {q:'大红袍属于？',a:['绿茶','乌龙茶','红茶','白茶'],r:1},
+  {q:'"茶马古道"主要运输的是？',a:['丝绸','茶叶','瓷器','盐'],r:1},
+  {q:'紫砂壶最著名的产地是？',a:['景德镇','宜兴','德化','龙泉'],r:1},
+  {q:'茶多酚主要有什么作用？',a:['抗氧化','增甜','增香','增色'],r:0},
+  {q:'茶叶中的咖啡因有什么作用？',a:['提神','催眠','降温','增甜'],r:0},
+  {q:'"明前茶"指的是？',a:['清明前采的茶','明前雨','明代茶','明天的茶'],r:0},
+  {q:'"雨前茶"一般指？',a:['谷雨前采的茶','下雨前','雨水节气','雨后'],r:0},
+  {q:'"一芽一叶"通常形容？',a:['采摘标准','茶叶外形','泡茶手法','茶具'],r:0},
+  {q:'中国最早关于茶的记载出现在？',a:['《诗经》','《神农本草经》','《茶经》','《本草纲目》'],r:1},
+  {q:'"神农尝百草，日遇七十二毒，得____而解之。"',a:['茶','药','水','酒'],r:0},
+  {q:'绿茶冲泡时一般用什么茶具？',a:['紫砂壶','玻璃杯','铁壶','陶壶'],r:1},
+  {q:'"功夫茶"主要流行于哪个地区？',a:['江浙','闽粤','川渝','西北'],r:1},
+  {q:'"盖碗"由哪几部分组成？',a:['盖、碗、托','盖、杯','碗、勺','盖、壶'],r:0},
+  {q:'茶汤颜色偏黄绿，通常是什么茶？',a:['绿茶','红茶','黑茶','熟普'],r:0},
+  {q:'"金骏眉"属于哪类茶？',a:['绿茶','红茶','乌龙茶','白茶'],r:1},
+  {q:'"白毫银针"属于哪类茶？',a:['绿茶','红茶','白茶','黄茶'],r:2},
+  {q:'"君山银针"属于哪类茶？',a:['绿茶','黄茶','白茶','黑茶'],r:1},
+  {q:'"六安瓜片"属于哪类茶？',a:['绿茶','红茶','乌龙茶','黄茶'],r:0},
+  {q:'"祁门红茶"产于？',a:['安徽','福建','云南','浙江'],r:0},
+  {q:'"滇红"中的"滇"指的是？',a:['云南','贵州','四川','广西'],r:0},
+  {q:'"冻顶乌龙"产自？',a:['台湾','福建','广东','云南'],r:0},
+  {q:'泡茶时"洗茶"的主要目的是？',a:['洗去灰尘和唤醒茶叶','洗干净茶具','增加香气','降温'],r:0},
+  {q:'茶汤出现"回甘"是指？',a:['苦后回甜','颜色回深','香气回浓','温度回升'],r:0},
+  {q:'"茶气"通常形容？',a:['喝茶后的体感','茶叶的气味','茶汤的颜色','茶具的材质'],r:0},
+  {q:'"春茶、夏茶、秋茶"中通常最受欢迎的是？',a:['春茶','夏茶','秋茶','冬茶'],r:0},
+  {q:'"老白茶"指的是？',a:['存放多年的白茶','老树采的白茶','老工艺白茶','老年人喝的白茶'],r:0},
+  {q:'"生普"和"熟普"的区别主要在于？',a:['是否渥堆发酵','产地不同','茶树品种','采摘季节'],r:0},
+  {q:'"绿茶要冷藏保存"的主要原因是？',a:['防止氧化变质','防止受潮','防止串味','节省空间'],r:0},
+  {q:'"茶宠"通常放在哪里？',a:['茶盘上','书架上','床头','窗台'],r:0},
+  {q:'"闻香杯"的主要作用是？',a:['闻茶香','喝茶','洗茶','装茶叶'],r:0},
+  {q:'下列哪种水最适合泡茶？',a:['山泉水','纯净水','自来水','井水'],r:0},
+  {q:'"一人得神，二人得趣，三人得味"出自？',a:['《茶疏》','《茶经》','《大观茶论》','《煮泉小品》'],r:0},
+  {q:'"茶道"一词最早出现在？',a:['中国唐代','日本','英国','印度'],r:0},
+  {q:'"抹茶"起源于？',a:['中国','日本','韩国','越南'],r:0},
+  {q:'传说中"尝百草，得茶而解之"的是谁？',a:['神农','陆羽','黄帝','伏羲'],r:0},
+  {q:'"女娲补天"中女娲炼的是什么？',a:['五色石','黄金','青铜','白玉'],r:0},
+  {q:'与陆羽并称"茶道双璧"的唐代诗僧是？',a:['皎然','寒山','拾得','贯休'],r:0},
+  {q:'"从来佳茗似佳人"是谁的诗句？',a:['苏轼','李白','杜甫','白居易'],r:0},
+  {q:'宋徽宗赵佶所著的茶书是？',a:['《大观茶论》','《茶经》','《茶录》','《品茶要录》'],r:0},
+  {q:'"赌书消得泼茶香"是宋代哪位词人的典故？',a:['李清照','朱淑真','唐婉','花蕊夫人'],r:0},
+  {q:'蒙顶山茶祖是谁？',a:['吴理真','陆羽','卢仝','神农'],r:0},
+  {q:'"七碗吃不得也，唯觉两腋习习清风生"出自？',a:['《七碗茶歌》','《茶经》','《茶录》','《煮茶记》'],r:0}
+];
+
+const FEST_MONSTER_SKINS={
+  midautumn:['🥮','🌕','🐰'],
+  spring:['🧨','🏮','🐉'],
+  national:['🎆','🎇','⭐'],
+  dragon:['🌿','🎋','🐲'],
+  lantern:['🏮','🎐','🥟'],
+  newyear:['🎊','❄️','☃️'],
+  christmas:['🎄','🎁','⛄'],
+  qingming:['🌿','🕯️','🌧️'],
+  labour:['🔧','⚙️','🛠️'],
+  qixi:['💫','💕','🐦'],
+  double9:['🌼','🍂','⛰️']
+};
+
+const CHAPTERS=[
+  {
+    id:'lake',name:'云湖',emoji:'🌊',desc:'碧波万顷 · 云雾缭绕',
+    bg:'linear-gradient(180deg,#cfe6ff 0%,#7fb8e0 60%,#2a5f8a 100%)',
+    pathFill:'#a8c8e8',pathBorder:'#6a90b0',
+    path:[
+      {row:0,col:0},{row:1,col:0},{row:2,col:0},{row:3,col:0},
+      {row:3,col:1},{row:3,col:2},
+      {row:2,col:2},{row:1,col:2},{row:0,col:2},
+      {row:0,col:3}
+    ],
+    towers:[
+      {row:0,col:1},{row:1,col:1},{row:1,col:3},
+      {row:2,col:1},{row:2,col:3},{row:3,col:3}
+    ]
+  },
+  {
+    id:'waterfall',name:'飞瀑',emoji:'💧',desc:'飞流直下 · 银龙咆哮',
+    bg:'linear-gradient(180deg,#d0e8f0 0%,#7fb8c0 60%,#2a6a6a 100%)',
+    pathFill:'#b8d8d8',pathBorder:'#5a8888',locked:true,
+    path:[
+      {row:0,col:0},{row:0,col:1},{row:0,col:2},{row:0,col:3},
+      {row:1,col:3},{row:2,col:3},{row:3,col:3},
+      {row:3,col:2},{row:3,col:1},
+      {row:2,col:1},{row:1,col:1},{row:1,col:0}
+    ],
+    towers:[
+      {row:1,col:2},{row:2,col:0},{row:2,col:2},
+      {row:3,col:0}
+    ]
+  },
+  {
+    id:'forest',name:'原始森林',emoji:'🌲',desc:'古木参天 · 万绿丛中',
+    bg:'linear-gradient(180deg,#cfe8c5 0%,#7fb868 60%,#2a5f2a 100%)',
+    pathFill:'#b8d0a8',pathBorder:'#5a8858',locked:true,
+    path:[
+      {row:0,col:0},{row:1,col:0},{row:2,col:0},{row:3,col:0},
+      {row:3,col:1},{row:3,col:2},{row:3,col:3},
+      {row:2,col:3},{row:1,col:3},
+      {row:1,col:2},{row:1,col:1},
+      {row:0,col:1},{row:0,col:2},{row:0,col:3}
+    ],
+    towers:[
+      {row:2,col:1},{row:2,col:2},
+      {row:0,col:1}
+    ]
+  }
+];
+
+function getLevelConfig(chapterId,levelNum){
+  const chapter=CHAPTERS.find(function(c){return c.id===chapterId;});
+  if(!chapter)return null;
+  const isBoss=levelNum%10===0;
+  const diff=1+(levelNum-1)*0.12;
+  return {
+    chapter:chapter,
+    level:levelNum,
+    isBoss:isBoss,
+    hpMul:diff,
+    spdMul:1+(levelNum-1)*0.008,
+    targetKills:8+Math.floor(levelNum/2),
+    waveCount:3+Math.floor(levelNum/15),
+    bossHpMul:isBoss?8:0,
+    reward:20+levelNum*2+(isBoss?50:0)
+  };
+}
+
+const FEST_MAPS={
+  newyear:{
+    bg:'linear-gradient(180deg,#cfe0ff 0%,#7fa8ff 60%,#4a7fc9 100%)',
+    pathFill:'#d8e0f0',pathBorder:'#7a90b0',
+    path:[
+      {row:0,col:1},{row:1,col:1},{row:2,col:1},{row:3,col:1},
+      {row:3,col:2},{row:2,col:2},{row:1,col:2},{row:0,col:2},
+      {row:0,col:3},{row:1,col:3}
+    ],
+    towers:[
+      {row:0,col:0},{row:1,col:0},{row:2,col:0},{row:3,col:0},{row:2,col:3},{row:3,col:3}
+    ],
+    miniBoss:{icon:'🎊',name:'小年',hpMul:5,atKill:10},
+    boss:{icon:'🔔',name:'岁钟神',hpMul:30,atKill:19}
+  },
+  spring:{
+    bg:'linear-gradient(180deg,#ffe4b8 0%,#ff9d6b 60%,#c9182b 100%)',
+    pathFill:'#ffd0a8',pathBorder:'#c96030',
+    path:[
+      {row:0,col:0},{row:0,col:1},{row:0,col:2},{row:0,col:3},
+      {row:1,col:3},{row:2,col:3},{row:3,col:3},
+      {row:3,col:2},{row:3,col:1},{row:3,col:0}
+    ],
+    towers:[
+      {row:1,col:0},{row:1,col:1},{row:1,col:2},
+      {row:2,col:0},{row:2,col:1},{row:2,col:2}
+    ],
+    miniBoss:{icon:'🐉',name:'年兽',hpMul:5,atKill:10},
+    boss:{icon:'🏮',name:'岁神',hpMul:30,atKill:19}
+  },
+  lantern:{
+    bg:'linear-gradient(180deg,#ffeab8 0%,#ffb86b 60%,#d45a2a 100%)',
+    pathFill:'#ffe0b8',pathBorder:'#c07840',
+    path:[
+      {row:0,col:0},{row:1,col:0},{row:2,col:0},{row:3,col:0},
+      {row:3,col:1},{row:2,col:1},{row:1,col:1},{row:0,col:1},
+      {row:0,col:2},{row:1,col:2},{row:2,col:2},{row:3,col:2},{row:3,col:3}
+    ],
+    towers:[
+      {row:0,col:3},{row:1,col:3},{row:2,col:3}
+    ],
+    miniBoss:{icon:'🥟',name:'小汤圆',hpMul:5,atKill:10},
+    boss:{icon:'🏮',name:'灯神',hpMul:30,atKill:19}
+  },
+  qingming:{
+    bg:'linear-gradient(180deg,#d8e8d8 0%,#a3c9a8 60%,#5aa87a 100%)',
+    pathFill:'#d0e0d0',pathBorder:'#789878',
+    path:[
+      {row:0,col:1},{row:1,col:1},{row:2,col:1},{row:3,col:1},
+      {row:3,col:2},{row:2,col:2},{row:1,col:2},{row:0,col:2},
+      {row:0,col:3},{row:1,col:3},{row:2,col:3},{row:3,col:3}
+    ],
+    towers:[
+      {row:0,col:0},{row:1,col:0},{row:2,col:0},{row:3,col:0}
+    ],
+    miniBoss:{icon:'🌿',name:'小柳',hpMul:5,atKill:10},
+    boss:{icon:'🌧️',name:'雨神',hpMul:30,atKill:19}
+  },
+  labour:{
+    bg:'linear-gradient(180deg,#ffd9b8 0%,#ff9d6b 60%,#c95a2a 100%)',
+    pathFill:'#ffd8c0',pathBorder:'#b86830',
+    path:[
+      {row:0,col:0},{row:1,col:0},{row:1,col:1},{row:0,col:1},
+      {row:0,col:2},{row:1,col:2},{row:2,col:2},{row:3,col:2},
+      {row:3,col:3}
+    ],
+    towers:[
+      {row:0,col:3},{row:2,col:0},{row:3,col:0},{row:2,col:1},{row:2,col:3}
+    ],
+    miniBoss:{icon:'⚙️',name:'小工匠',hpMul:5,atKill:10},
+    boss:{icon:'🔨',name:'工匠神',hpMul:30,atKill:19}
+  },
+  dragon:{
+    bg:'linear-gradient(180deg,#cfe6d5 0%,#7fbf6a 60%,#2a8a5a 100%)',
+    pathFill:'#c8e0b8',pathBorder:'#5a8858',
+    path:[
+      {row:0,col:0},{row:0,col:1},{row:0,col:2},{row:0,col:3},
+      {row:1,col:3},{row:2,col:3},{row:3,col:3},{row:3,col:2},{row:3,col:1},{row:3,col:0}
+    ],
+    towers:[
+      {row:1,col:0},{row:1,col:1},{row:1,col:2},
+      {row:2,col:0},{row:2,col:1},{row:2,col:2}
+    ],
+    miniBoss:{icon:'🎋',name:'小粽',hpMul:5,atKill:10},
+    boss:{icon:'🐲',name:'龙神',hpMul:30,atKill:19}
+  },
+  qixi:{
+    bg:'linear-gradient(180deg,#ffe4ee 0%,#ff9dc0 60%,#d45a9a 100%)',
+    pathFill:'#ffd0e0',pathBorder:'#c07898',
+    path:[
+      {row:0,col:1},{row:0,col:2},{row:0,col:3},
+      {row:1,col:3},{row:2,col:3},{row:3,col:3},
+      {row:3,col:2},{row:3,col:1},{row:3,col:0},
+      {row:2,col:0},{row:1,col:0},{row:0,col:0}
+    ],
+    towers:[
+      {row:1,col:1},{row:1,col:2},{row:2,col:1},{row:2,col:2}
+    ],
+    miniBoss:{icon:'💫',name:'小鹊',hpMul:5,atKill:10},
+    boss:{icon:'🐦',name:'鹊神',hpMul:30,atKill:19}
+  },
+  midautumn:{
+    bg:'linear-gradient(180deg,#1a1a3a 0%,#2a2a5a 50%,#1a3a5a 100%)',
+    pathFill:'#c9b98c',pathBorder:'#8a7050',
+    path:[
+      {row:0,col:0},{row:0,col:1},{row:0,col:2},{row:0,col:3},
+      {row:1,col:3},{row:2,col:3},{row:3,col:3},
+      {row:3,col:2},{row:3,col:1},{row:3,col:0},
+      {row:2,col:0},{row:1,col:0}
+    ],
+    towers:[
+      {row:1,col:1},{row:1,col:2},{row:2,col:1},{row:2,col:2}
+    ],
+    miniBoss:{icon:'🧝‍♀️',name:'嫦娥',hpMul:5,atKill:10},
+    boss:{icon:'🌕',name:'月神虚影',hpMul:30,atKill:19}
+  },
+  national:{
+    bg:'linear-gradient(180deg,#ffd9d9 0%,#ff6b6b 60%,#c9182b 100%)',
+    pathFill:'#ffc0c0',pathBorder:'#a01818',
+    path:[
+      {row:0,col:0},{row:0,col:1},{row:0,col:2},{row:0,col:3},
+      {row:1,col:3},{row:2,col:3},{row:3,col:3},
+      {row:3,col:2},{row:3,col:1},{row:3,col:0},
+      {row:2,col:0},{row:1,col:0}
+    ],
+    towers:[
+      {row:1,col:1},{row:1,col:2},{row:2,col:1},{row:2,col:2}
+    ],
+    miniBoss:{icon:'⭐',name:'将星',hpMul:5,atKill:10},
+    boss:{icon:'🎖️',name:'国魂',hpMul:30,atKill:19}
+  },
+  double9:{
+    bg:'linear-gradient(180deg,#ffe4b8 0%,#e6b86b 60%,#c98a2a 100%)',
+    pathFill:'#f0d0a0',pathBorder:'#a88850',
+    path:[
+      {row:0,col:0},{row:1,col:0},{row:2,col:0},{row:3,col:0},
+      {row:3,col:1},{row:3,col:2},{row:3,col:3},{row:2,col:3},{row:1,col:3},{row:0,col:3},
+      {row:0,col:2},{row:0,col:1}
+    ],
+    towers:[
+      {row:1,col:1},{row:1,col:2},{row:2,col:1},{row:2,col:2}
+    ],
+    miniBoss:{icon:'🍂',name:'小菊',hpMul:5,atKill:10},
+    boss:{icon:'🌼',name:'菊神',hpMul:30,atKill:19}
+  },
+  christmas:{
+    bg:'linear-gradient(180deg,#d8f0e0 0%,#8fc9a8 60%,#2a7a4a 100%)',
+    pathFill:'#e0f0e0',pathBorder:'#78a888',
+    path:[
+      {row:0,col:0},{row:0,col:1},{row:0,col:2},{row:0,col:3},
+      {row:1,col:3},{row:2,col:3},{row:3,col:3},
+      {row:3,col:2},{row:3,col:1},{row:3,col:0},
+      {row:2,col:0},{row:1,col:0}
+    ],
+    towers:[
+      {row:1,col:1},{row:1,col:2},{row:2,col:1},{row:2,col:2}
+    ],
+    miniBoss:{icon:'🦌',name:'小麋鹿',hpMul:5,atKill:10},
+    boss:{icon:'❄️',name:'雪神',hpMul:30,atKill:19}
+  }
+};
+
+
+const RANK_FAKE=[
+  {name:'茶山老农',score:32},{name:'一叶知秋',score:24},
+  {name:'云湖钓叟',score:18},{name:'瀑边小茶',score:12},{name:'森林拾光',score:8}
+];
+
+/* ---------- 状态 ---------- */
+const S={
+  tea:30, bag:{}, houseLevel:0, houseProg:0,
+  equip:{basket:0,pestle:0,pot:0},
+  lastSign:'', signStreak:0,
+  unlockedFests:{}, festSkins:{}, bestWave:0, kills:0,
+  progress:{lake:1,waterfall:0,forest:0},
+  lakeTower:null,
+  towerLevel:0, charEvoLv:{}, talentCards:{}
+};
+
+const PATH=[
+  {row:0,col:0},{row:1,col:0},{row:2,col:0},{row:3,col:0},
+  {row:3,col:1},{row:3,col:2},
+  {row:2,col:2},{row:1,col:2},{row:0,col:2},
+  {row:0,col:3}
+];
+
+const TD={
+  active:false, monsters:[], slots:[],
+wave:1, kills:1, waveKills:0, waveTarget:8, waveSpawned:0,
+spawnT:1.5, baseHp:10,
+  selectedChar:null,
+  festMission:{active:false,festId:null,kills:0,target:20},
+  curChapter:'lake', curLevel:1, levelConfig:null
+};
+
+/* ---------- 工具 ---------- */
+function $(s){return document.querySelector(s);}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
+
+function toast(msg){
+  const d=document.createElement('div');
+  d.className='toast';
+  d.textContent=msg;
+  document.body.appendChild(d);
+  setTimeout(function(){d.remove();},1600);
+}
+function floatText(x,y,text,color){
+  const d=document.createElement('div');
+  d.className='float';
+  d.textContent=text;
+  d.style.left=x+'px';
+  d.style.top=y+'px';
+  if(color)d.style.color=color;
+  document.body.appendChild(d);
+  setTimeout(function(){d.remove();},900);
+}
+function save(){
+  try{localStorage.setItem('chashan_v4',JSON.stringify(S));}catch(e){}
+}
+function load(){
+  try{
+    const raw=localStorage.getItem('chashan_v4');
+    if(raw)Object.assign(S,JSON.parse(raw));
+  }catch(e){}
+  const allChars=ALL_CHARS.concat(FESTIVALS.reduce(function(acc,f){
+    return acc.concat(f.chars);
+  },[]));
+  allChars.forEach(function(c){
+    if(!Array.isArray(S.bag[c])||S.bag[c].length!==MAX_LV){
+      S.bag[c]=new Array(MAX_LV).fill(0);
+    }
+  });
+  if(!S.bag['茶'][0])S.bag['茶'][0]=1;
+  if(!localStorage.getItem('chashan_v4'))S.tea=30;
+}
+function topLevel(c){
+  const a=S.bag[c];
+  if(!a)return 0;
+  for(let i=MAX_LV-1;i>=0;i--){if(a[i]>0)return i+1;}
+  return 0;
+}
+function addChar(c,lv){
+  if(lv===undefined)lv=1;
+  if(!S.bag[c])S.bag[c]=new Array(MAX_LV).fill(0);
+  const i=Math.min(Math.max(lv,1),MAX_LV)-1;
+  S.bag[c][i]++;
+}
+function dropChar(){
+  const fest=activeFestival();
+  const pool=ALL_CHARS.slice();
+  const weights=Object.assign({},DROP_W);
+  if(fest){
+    fest.chars.forEach(function(c){pool.push(c);weights[c]=30;});
+  }
+  const total=pool.reduce(function(s,c){return s+(weights[c]||5);},0);
+  let r=Math.random()*total;
+  for(let i=0;i<pool.length;i++){
+    const c=pool[i];
+    r-=(weights[c]||5);
+    if(r<=0){addChar(c,1);return c;}
+  }
+  addChar('茶',1);
+  return '茶';
+}
+
+/* ---------- 界面切换 ---------- */
+function go(id){
+  $$('.screen').forEach(function(e){e.classList.remove('active');});
+  const el=$('#'+id);
+  if(el)el.classList.add('active');
+  TD.active=(id==='screen-path');
+  if(id!=='screen-path')clearMonsters();
+  if(id==='screen-path')initBattlefield();
+  refreshUI();
+}
+
+let curChapter='lake';
+
+function openAdventure(){
+  if(!S.progress)S.progress={lake:1,waterfall:0,forest:0};
+  go('screen-levels');
+  renderLevelSelect();
+}
+
+function renderLevelSelect(){
+  if(!S.progress)S.progress={lake:1,waterfall:0,forest:0};
+  const tabs=$('#chapterTabs');
+  if(!tabs)return;
+  tabs.innerHTML='';
+  CHAPTERS.forEach(function(ch){
+    const b=document.createElement('button');
+    b.type='button';
+    const unlocked=S.progress[ch.id]>0||ch.id==='lake';
+    b.textContent=ch.emoji+' '+ch.name;
+    b.className=(ch.id===curChapter?'on':'')+(unlocked?'':' locked');
+    b.addEventListener('click',function(){
+      if(!unlocked){toast('需要先通关上一章');return;}
+      curChapter=ch.id;
+      renderLevelSelect();
+    });
+    tabs.appendChild(b);
+  });
+  const chapter=CHAPTERS.find(function(c){return c.id===curChapter;});
+  const progress=S.progress[curChapter]||0;
+  const ct=$('#chapterTitle');
+  if(ct)ct.textContent=chapter.desc+' · 已通关 '+Math.max(0,progress-1)+'/50';
+
+  const grid=$('#levelGrid');
+  if(!grid)return;
+  grid.innerHTML='';
+  for(let i=1;i<=50;i++){
+    const cell=document.createElement('div');
+    const isBoss=i%10===0;
+    const cleared=i<progress;
+    const isCurrent=i===progress;
+    const isLocked=i>progress;
+    cell.className='lv-cell'+(cleared?' cleared':'')+(isBoss?' boss':'')+(isLocked&&!isCurrent?' locked':'')+(isCurrent?' current':'');
+    if(isBoss&&!isLocked){
+      cell.innerHTML='👹<span class="boss-tag">BOSS</span>';
+    }else{
+      cell.textContent=i;
+    }
+    cell.addEventListener('click',function(){
+      if(isLocked&&!isCurrent){toast('需要先通关前一关');return;}
+      startLevel(curChapter,i);
+    });
+    grid.appendChild(cell);
+  }
+}
+
+function startLevel(chapterId,levelNum){
+  TD.curChapter=chapterId;
+  TD.curLevel=levelNum;
+  const cfg=getLevelConfig(chapterId,levelNum);
+  if(!cfg)return;
+  TD.levelConfig=cfg;
+  TD.baseHp=10;TD.wave=1;TD.kills=1;TD.waveKills=0;TD.waveSpawned=0;
+  TD.waveTarget=Math.min(60,8+Math.floor(levelNum*3));
+  TD.festMission={active:false,festId:null,kills:0,target:cfg.targetKills};
+  clearMonsters();
+  go('screen-path');
+  toast('第 '+levelNum+' 关'+(cfg.isBoss?' · BOSS 战':''));
+}
+
+function completeLevel(){
+  const cfg=TD.levelConfig;
+  if(!cfg)return;
+  const chapterId=cfg.chapter.id;
+  const levelNum=cfg.level;
+  if(S.progress[chapterId]<=levelNum){
+    S.progress[chapterId]=levelNum+1;
+    if(chapterId==='lake'&&levelNum===50&&S.progress.waterfall===0)S.progress.waterfall=1;
+    if(chapterId==='waterfall'&&levelNum===50&&S.progress.forest===0)S.progress.forest=1;
+  }
+  S.tea+=cfg.reward;
+  save();
+  const nextLevel=levelNum+1;
+  let msg='<div class="celebrate"><div class="big">🎉</div>'+
+    '<span class="fest-tag">第 '+levelNum+' 关通关</span>'+
+    '<h3>奖励 '+cfg.reward+' 🍃</h3>';
+  if(levelNum===50){
+    msg+='<p>恭喜通关「'+cfg.chapter.name+'」！</p>';
+    if(chapterId==='lake')msg+='<p>解锁第二章：飞瀑</p>';
+    else if(chapterId==='waterfall')msg+='<p>解锁第三章：原始森林</p>';
+    else msg+='<p>三章全通关，你是茶山之王！</p>';
+    msg+='<button type="button" class="btn-main" id="lvBack">返回关卡</button>';
+  }else{
+    msg+='<p>下一关：第 '+nextLevel+' 关'+(nextLevel%10===0?'（BOSS）':'')+'</p>'+
+      '<button type="button" class="btn-main" id="lvNext">下一关</button>'+
+      '<button type="button" class="btn-main" id="lvBack" style="margin-top:8px;background:#e2e9e0;color:#5a6b5c;box-shadow:none">返回关卡</button>';
+  }
+  msg+='</div>';
+  openModal(msg);
+  const nb=document.getElementById('lvNext');
+  if(nb)nb.addEventListener('click',function(){closeModal();startLevel(chapterId,nextLevel);});
+  const bb=document.getElementById('lvBack');
+  if(bb)bb.addEventListener('click',function(){closeModal();openAdventure();});
+}
+
+
+function startGame(){go('screen-mountain');}
+
+/* ---------- 弹窗 ---------- */
+const modal=$('#modal'), modalBody=$('#modalBody');
+let adCancelled=false;
+
+function openModal(html){
+  modalBody.innerHTML=html;
+  modal.classList.add('show');
+}
+function closeModal(){
+  modal.classList.remove('show');
+  adCancelled=true;
+}
+function showAd(cb){
+  adCancelled=false;
+  let t=3;
+  openModal('<div class="ad">📺 广告播放中…<b id="adT">'+t+'</b></div>');
+  const iv=setInterval(function(){
+    if(adCancelled){clearInterval(iv);return;}
+    t--;
+    const e=document.getElementById('adT');
+    if(e)e.textContent=t;
+    if(t<=0){
+      clearInterval(iv);
+      if(!adCancelled){closeModal();cb();}
+    }
+  },1000);
+}
+
+/* --------- 茶山 ---------- */
+const trees=[];
+function initTrees(){
+  const g=$('#teaGrid');
+  if(!g)return;
+  g.innerHTML='';
+  trees.length=0;
+  for(let i=0;i<TREE_COUNT;i++){
+    (function(idx){
+      const d=document.createElement('div');
+      d.className='tree';
+      d.innerHTML=
+        '<span class="leaf">🍃</span>'+
+        '<span class="leaf">🍃</span>'+
+        '<span class="leaf">🍃</span>'+
+        '<span class="leaf">🍃</span>'+
+        '<span class="leaf">🍃</span>'+
+        '<span class="leaf">🍃</span>'+
+        '<span class="leaf">🍃</span>'+
+        '<span class="leaf">🍃</span>'+
+        '<span class="flower">🌸</span>'+
+        '<span class="flower">🌼</span>'+
+        '<div class="cd"></div>';
+      d.addEventListener('click',function(ev){pickTea(idx,ev);});
+      g.appendChild(d);
+      trees.push({el:d,cd:0,leaves:8,leavesDom:d.querySelectorAll('.leaf')});
+    })(i);
+  }
+  const decor=[
+    {x:33,y:6,e:'🌸'},{x:67,y:6,e:'🌼'},
+    {x:16,y:30,e:'🍃'},{x:55,y:30,e:'🌸'},{x:88,y:30,e:'🍃'},
+    {x:33,y:50,e:'🌼'},{x:67,y:50,e:'🌸'},
+    {x:16,y:70,e:'🌸'},{x:55,y:70,e:'🍃'},{x:88,y:70,e:'🌼'},
+    {x:33,y:88,e:'🍃'},{x:67,y:88,e:'🌸'}
+  ];
+  decor.forEach(function(d){
+    const el=document.createElement('span');
+    el.className='connect-decor';
+    el.style.left=d.x+'%';
+    el.style.top=d.y+'%';
+    el.textContent=d.e;
+    g.appendChild(el);
+  });
+}
+
+function pickTea(i,ev){
+  const t=trees[i];
+  if(!t)return;
+  if(t.cd>0){toast('茶树还在成熟中，请稍等～');return;}
+  if(!t.leaves||t.leaves<=0){toast('叶子已摘完');return;}
+  const leafEl=t.leavesDom[t.leaves-1];
+  if(leafEl){
+    leafEl.classList.add('fly');
+    setTimeout(function(){if(leafEl)leafEl.classList.remove('fly');},600);
+  }
+  t.leaves--;
+
+ let gain=2+S.equip.basket;
+  if(Math.random() < 0.05 * getTalentCount('朴实之力')) { gain += 1; }
+  const fest=activeFestival();
+  if(fest && S.unlockedFests[fest.id]){
+    gain = Math.round(gain * (1.5 + 0.5 * getTalentCount('茶神之赐')));
+  }
+  if(Math.random() < 0.10 * getTalentCount('熟练采集')) { dropChar(); }
+  if(Math.random() < 0.15 * getTalentCount('双倍幸运')) { dropChar(); }
+  S.tea+=gain;
+SFX.pick();
+  SFX.leaf();
+  const ch=dropChar();
+  const rect=t.el.getBoundingClientRect();
+  floatText(rect.left+rect.width/2-20,rect.top+rect.height/2-8,'+'+gain+'🍃');
+  if(ch)toast('采到字：「'+ch+'」');
+
+  if(t.leaves<=0){
+    t.cd = TREE_CD * Math.max(0.5, 1 - 0.05 * getTalentCount('轻快步伐'));
+    t.el.classList.add('cool');
+  }
+
+  checkFestUnlock();
+  save();
+  refreshUI();
+}
+
+function investHouse(){
+  if(S.tea<10){toast('茶叶不足 10');return;}
+  S.tea-=10;
+  S.houseProg+=1;
+  if(S.houseProg>=10){
+    S.houseProg=0;
+    S.houseLevel++;
+    toast('茶楼升级！Lv.'+S.houseLevel+' 每秒产茶 +'+S.houseLevel);
+  }
+  save();
+  refreshUI();
+}
+
+/* ---------- 塔防 ---------- */
+function loadFestDecor(){
+  const decor=$('#festDecor');
+  if(!decor)return;
+  decor.innerHTML='';
+  const scene=document.querySelector('.td-scene');
+  const fest=activeFestival();
+  if(scene)scene.style.background='';
+  if(!fest||!S.unlockedFests[fest.id])return;
+
+  if(fest.id==='midautumn'){
+    if(scene)scene.style.background='linear-gradient(180deg,#1a1a3a 0%,#2a2a5a 50%,#1a3a5a 100%)';
+    decor.innerHTML=
+      '<div class="moon-deco">🌙</div>'+
+      '<div class="mooncake-drop" style="left:12%;animation-delay:0s">🥮</div>'+
+      '<div class="mooncake-drop" style="left:42%;animation-delay:2.3s">🥮</div>'+
+      '<div class="mooncake-drop" style="left:75%;animation-delay:4.6s">🥮</div>';
+  }
+  else if(fest.id==='national'){
+    if(scene)scene.style.background='linear-gradient(180deg,#ffd9d9 0%,#ff6b6b 60%,#c9182b 100%)';
+    decor.innerHTML=
+      '<div class="fest-flag" style="top:6px;left:8px">🇨🇳</div>'+
+      '<div class="fest-flag" style="top:6px;right:8px">🇨🇳</div>'+
+      '<div class="fest-flag" style="top:6px;left:46%">🎉</div>';
+  }
+  else if(fest.id==='spring'){
+    if(scene)scene.style.background='linear-gradient(180deg,#ffe4b8 0%,#ff9d6b 60%,#c9182b 100%)';
+    decor.innerHTML=
+      '<div class="fest-lantern" style="left:10%">🏮</div>'+
+      '<div class="fest-lantern" style="left:44%;animation-delay:1s">🏮</div>'+
+      '<div class="fest-lantern" style="right:10%;animation-delay:.5s">🏮</div>';
+  }
+  else if(fest.id==='dragon'){
+    if(scene)scene.style.background='linear-gradient(180deg,#cfe6d5 0%,#7fbf6a 60%,#2a8a5a 100%)';
+    decor.innerHTML='<div style="position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:32px">🎋</div>';
+  }
+  else if(fest.id==='lantern'){
+    if(scene)scene.style.background='linear-gradient(180deg,#ffeab8 0%,#ffb86b 60%,#d45a2a 100%)';
+    decor.innerHTML=
+      '<div class="fest-lantern" style="left:15%">🏮</div>'+
+      '<div class="fest-lantern" style="left:45%;animation-delay:1s">🏮</div>'+
+      '<div class="fest-lantern" style="right:15%;animation-delay:.5s">🏮</div>';
+  }
+  else if(fest.id==='newyear'){
+    if(scene)scene.style.background='linear-gradient(180deg,#cfe0ff 0%,#7fa8ff 60%,#4a7fc9 100%)';
+    decor.innerHTML='<div style="position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:36px">🎊</div>';
+  }
+  else if(fest.id==='christmas'){
+    if(scene)scene.style.background='linear-gradient(180deg,#d8f0e0 0%,#8fc9a8 60%,#2a7a4a 100%)';
+    decor.innerHTML=
+      '<div style="position:absolute;top:6px;left:12px;font-size:34px">🎄</div>'+
+      '<div style="position:absolute;top:6px;right:12px;font-size:34px">🎁</div>';
+  }
+  else if(fest.id==='qingming'){
+    if(scene)scene.style.background='linear-gradient(180deg,#d8e8d8 0%,#a3c9a8 60%,#5aa87a 100%)';
+    decor.innerHTML='<div style="position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:32px">🌿</div>';
+  }
+  else if(fest.id==='labour'){
+    if(scene)scene.style.background='linear-gradient(180deg,#ffd9b8 0%,#ff9d6b 60%,#c95a2a 100%)';
+    decor.innerHTML='<div style="position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:32px">🔧</div>';
+  }
+  else if(fest.id==='qixi'){
+    if(scene)scene.style.background='linear-gradient(180deg,#ffe4ee 0%,#ff9dc0 60%,#d45a9a 100%)';
+    decor.innerHTML='<div style="position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:34px">💫</div>';
+  }
+  else if(fest.id==='double9'){
+    if(scene)scene.style.background='linear-gradient(180deg,#ffe4b8 0%,#e6b86b 60%,#c98a2a 100%)';
+    decor.innerHTML='<div style="position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:32px">🌼</div>';
+  }
+}
+
+function loadChapterMap(){
+  const grid=$('#tdGrid');
+  if(!grid)return;
+  let mapData=null;
+  if(TD.festMission.active&&FEST_MAPS[TD.festMission.festId]){
+    mapData=FEST_MAPS[TD.festMission.festId];
+  }else{
+    const chapter=TD.curChapter
+      ?CHAPTERS.find(function(c){return c.id===TD.curChapter;})
+      :CHAPTERS[0];
+    if(!chapter)return;
+    mapData=chapter;
+  }
+  const pathArr=mapData.path;
+  const towerArr=mapData.towers;
+  PATH.length=0;
+  pathArr.forEach(function(p){PATH.push(p);});
+  grid.innerHTML='';
+  const pathSet={};
+  pathArr.forEach(function(p){pathSet[p.row+','+p.col]=1;});
+  const towerMap={};
+  towerArr.forEach(function(p,i){towerMap[p.row+','+p.col]=i;});
+  TD.slots=[];
+  for(let r=0;r<4;r++){
+    for(let c=0;c<4;c++){
+      const d=document.createElement('div');
+      d.className='cell';
+      const key=r+','+c;
+      if(r===pathArr[0].row&&c===pathArr[0].col){d.classList.add('start');d.textContent='入';}
+      else if(r===pathArr[pathArr.length-1].row&&c===pathArr[pathArr.length-1].col){d.classList.add('goal');d.textContent='🏯';}
+      else if(pathSet[key]){d.classList.add('path');}
+      else if(towerMap[key]!==undefined){
+        d.classList.add('tower');
+        d.dataset.slot=towerMap[key];
+      }
+      grid.appendChild(d);
+    }
+  }
+  towerArr.forEach(function(p,i){
+    const el=grid.children[p.row*4+p.col];
+    TD.slots[i]={el:el,row:p.row,col:p.col,unit:null};
+  });
+  grid.onclick=function(e){
+    const cell=e.target.closest('.cell.tower');
+    if(!cell)return;
+    const idx=parseInt(cell.dataset.slot,10);
+    if(!isNaN(idx))clickSlot(idx);
+  };
+  const scene=document.querySelector('.td-scene');
+  if(scene)scene.style.background=mapData.bg;
+  const fill=document.querySelectorAll('.cell.path');
+  fill.forEach(function(el){
+    el.style.background='linear-gradient(180deg,'+mapData.pathFill+','+mapData.pathBorder+')';
+  });
+}
+
+function saveLakeTower(){
+  S.lakeTower={
+    wave:TD.wave,waveTarget:TD.waveTarget,waveKills:TD.waveKills,
+    kills:TD.kills,baseHp:TD.baseHp,
+    slots:TD.slots.map(function(s){
+      if(s&&s.unit){
+        return {char:s.unit.char,lv:s.unit.lv,cost:s.unit.cost,
+          cd:s.unit.cd||0,skillT:s.unit.skillT||0,
+          buffFastT:s.unit.buffFastT||0,buffDmgT:s.unit.buffDmgT||0,
+          heavyHit:s.unit.heavyHit||false,moonStep:s.unit.moonStep||0};
+      }
+      return null;
+    })
+  };
+  save();
+}
+
+function restoreLakeTower(){
+  if(!S.lakeTower)return false;
+  TD.wave=S.lakeTower.wave||1;
+  TD.waveTarget=S.lakeTower.waveTarget||8;
+  TD.waveKills=S.lakeTower.waveKills||0;
+  TD.kills=S.lakeTower.kills||1;
+  TD.baseHp=S.lakeTower.baseHp||10;
+  TD.waveSpawned=0;
+  if(S.lakeTower.slots){
+    S.lakeTower.slots.forEach(function(u,i){
+      if(u&&TD.slots[i]){
+        TD.slots[i].unit={char:u.char,lv:u.lv,cost:u.cost,cd:u.cd,
+          skillT:u.skillT,buffFastT:u.buffFastT,buffDmgT:u.buffDmgT,
+          heavyHit:u.heavyHit,moonStep:u.moonStep};
+      }
+    });
+  }
+  return true;
+}
+
+function clearLakeTower(){
+  S.lakeTower=null;
+  save();
+}
+
+function manualSave(){
+  saveLakeTower();
+  toast('进度已保存，下次进入继续');
+}
+
+function backToHome(){
+  openModal('<div class="celebrate">'+
+    '<div class="big">⚠️</div>'+
+    '<h3>确定返回主页吗？</h3>'+
+    '<p>当前进度将<b style="color:#c9182b">不会保存</b>，<br>波次、塔位、茶楼血量都会清零。</p>'+
+    '<div style="display:flex;gap:8px">'+
+      '<button type="button" class="btn-main" id="backHomeOk" style="flex:1;padding:12px;font-size:13px;margin-top:0;background:linear-gradient(135deg,#ff8a8a,#c9182b);color:#fff;box-shadow:none">确定返回</button>'+
+      '<button type="button" class="btn-main" id="backHomeSave" style="flex:1;padding:12px;font-size:13px;margin-top:0">先存档</button>'+
+      '<button type="button" class="btn-main" id="backHomeCancel" style="flex:1;padding:12px;font-size:13px;margin-top:0;background:#e2e9e0;color:#5a6b5c;box-shadow:none">取消</button>'+
+    '</div>'+
+  '</div>');
+  document.getElementById('backHomeCancel').addEventListener('click',closeModal);
+  document.getElementById('backHomeSave').addEventListener('click',function(){
+    saveLakeTower();
+    closeModal();
+    toast('进度已保存');
+    go('screen-home');
+  });
+  document.getElementById('backHomeOk').addEventListener('click',function(){
+    clearLakeTower();
+    TD.baseHp=10;TD.wave=1;TD.kills=1;TD.waveKills=0;TD.waveSpawned=0;TD.waveTarget=8;
+    TD.slots.forEach(function(s){if(s)s.unit=null;});
+    clearMonsters();
+    closeModal();
+    go('screen-home');
+  });
+}
+
+
+function initBattlefield(){
+  const grid=$('#tdGrid');
+  if(!grid)return;
+  loadChapterMap();
+	if(!TD.levelConfig){
+    if(S.lakeTower){restoreLakeTower();}
+    else{TD.wave=1;TD.waveTarget=8;TD.waveKills=0;TD.kills=1;TD.baseHp=10;TD.waveSpawned=0;}
+  }	if(TD.levelConfig&&TD.levelConfig.level){
+    TD.waveTarget=Math.min(60,8+Math.floor(TD.levelConfig.level*3));
+    TD.waveSpawned=0;TD.waveKills=0;TD.wave=1;TD.kills=1;TD.baseHp=10;
+  }else{
+    if(S.lakeTower){
+      restoreLakeTower();
+    }else{
+      TD.waveTarget=8;TD.waveSpawned=0;TD.waveKills=0;TD.wave=1;TD.kills=1;TD.baseHp=10;
+    }
+  }
+  if(false){
+    const pathSet={};
+    PATH.forEach(function(p){pathSet[p.row+','+p.col]=1;});
+    const towerPositions=[
+      {row:0,col:1},{row:1,col:1},{row:1,col:3},
+      {row:2,col:1},{row:2,col:3},{row:3,col:3}
+    ];
+    const towerMap={};
+    towerPositions.forEach(function(p,i){towerMap[p.row+','+p.col]=i;});
+
+    for(let r=0;r<4;r++){
+      for(let c=0;c<4;c++){
+        const d=document.createElement('div');
+        d.className='cell';
+        const key=r+','+c;
+        if(r===0&&c===0){d.classList.add('start');d.textContent='入';}
+        else if(r===0&&c===3){d.classList.add('goal');d.textContent='🏯';}
+        else if(pathSet[key]){d.classList.add('path');}
+        else if(towerMap[key]!==undefined){
+          d.classList.add('tower');
+          d.dataset.slot=towerMap[key];
+        }
+        grid.appendChild(d);
+      }
+    }
+
+    TD.slots=[];
+    towerPositions.forEach(function(p,i){
+      const el=grid.children[p.row*4+p.col];
+      TD.slots[i]={el:el,row:p.row,col:p.col,unit:null};
+    });
+
+    grid.addEventListener('click',function(e){
+      const cell=e.target.closest('.cell.tower');
+      if(!cell)return;
+      const idx=parseInt(cell.dataset.slot,10);
+      if(!isNaN(idx))clickSlot(idx);
+    });
+  }
+  loadFestDecor();
+  renderHand();
+  syncSlotUI();
+}
+
+function syncSlotUI(){
+  TD.slots.forEach(function(slot){
+    if(!slot||!slot.el)return;
+    if(slot.unit){
+      const def=UNIT_DEFS[slot.unit.char];
+      const isMyth=MYTH_CHARS.indexOf(slot.unit.char)>=0;
+      slot.el.classList.add('filled');
+      slot.el.innerHTML='<span class="unit-icon">'+(def?def.icon:'🍃')+'</span>'+
+        '<span class="lv-badge">L'+slot.unit.lv+'</span>'+
+        (isMyth?'<span class="my-badge">仙</span>':'');
+    }else{
+      slot.el.classList.remove('filled');
+      slot.el.innerHTML='';
+    }
+  });
+}
+
+function renderHand(){
+  const row=$('#handRow');
+  if(!row)return;
+  row.innerHTML='';
+  const fest=activeFestival();
+let avail=Object.keys(UNIT_DEFS).filter(function(c){
+    if(topLevel(c)<1)return false;
+    if(FEST_CHARS.indexOf(c)>=0){
+      return fest && fest.chars.indexOf(c)>=0;
+    }
+    return true;
+  });
+  if(avail.length===0){
+    row.innerHTML='<div style="font-size:11.5px;color:#83978a;padding:14px 4px">还没有可上阵的茶字，去采茶吧！</div>';
+    return;
+  }
+
+  avail.forEach(function(c){
+    const def=UNIT_DEFS[c];
+    const lv=topLevel(c);
+    const cost=def.cost+Math.max(0,lv-1)*3;
+    const can=S.tea>=cost;
+    const isMyth=MYTH_CHARS.indexOf(c)>=0;
+    const d=document.createElement('div');
+    d.className='hand-card'+(TD.selectedChar===c?' sel':'')+(can?'':' dis')+(isMyth?' myth':'');
+    d.innerHTML='<div class="ic">'+def.icon+'</div>'+
+      '<div class="nm">'+def.name+'</div>'+
+      '<div class="cost">'+cost+'🍃</div>';
+    d.addEventListener('click',function(){
+      if(!can){toast('茶叶不足');return;}
+      TD.selectedChar=(TD.selectedChar===c?null:c);
+      renderHand();
+    });
+    row.appendChild(d);
+  });
+}
+
+function showUnitInfo(i){
+  const slot=TD.slots[i];
+  if(!slot||!slot.unit)return;
+  const u=slot.unit;
+  const def=UNIT_DEFS[u.char];
+  if(!def)return;
+
+  const bagLv=topLevel(u.char);
+  let upgradeHint;
+  if(bagLv>u.lv)upgradeHint='字库中已有 Lv'+bagLv+'，去「字库」合成更高等级';
+  else if(bagLv===u.lv)upgradeHint='已是字库最高等级';
+  else upgradeHint='字库中暂无此字';
+
+  const refund=Math.round((u.cost||10)*0.5);
+
+  let html='<h3>'+def.icon+' '+def.name+' <span style="color:#c9a227;font-size:13px">Lv'+u.lv+'</span></h3>';
+  html+='<div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)">';
+  html+='<b style="font-size:13.5px">'+def.skName+'</b>';
+  html+='<p style="font-size:11.5px;color:#83978a;margin-top:6px;line-height:1.7">'+def.skDesc+'</p>';
+  html+='<p style="font-size:11.5px;color:#c9a227;margin-top:6px">冷却：'+def.sk+' 秒'+(u.char==='月'?'（三变循环 5/10/15 秒）':'')+'</p>';
+  html+='</div>';
+  html+='<p class="tip">'+upgradeHint+'</p>';
+  html+='<div style="display:flex;gap:8px">';
+  html+='<button type="button" class="btn-main" id="unitRemove" style="flex:1;padding:12px;font-size:13px;letter-spacing:1px;margin-top:0">返还 '+refund+'🍃</button>';
+  html+='<button type="button" class="btn-main" id="unitClose" style="flex:1;padding:12px;font-size:13px;letter-spacing:1px;margin-top:0;background:#e2e9e0;color:#5a6b5c;box-shadow:none">取消</button>';
+  html+='</div>';
+
+  openModal(html);
+
+  document.getElementById('unitClose').addEventListener('click',closeModal);
+  document.getElementById('unitRemove').addEventListener('click',function(){
+    S.tea+=refund;
+    slot.unit=null;
+    syncSlotUI();
+    closeModal();
+    toast('已拆除，返还 '+refund+' 🍃');
+    renderHand();
+    refreshUI();
+    save();
+  });
+}
+
+function showUnitInfo(i){
+  const slot=TD.slots[i];
+  if(!slot||!slot.unit)return;
+  const u=slot.unit;
+  const def=UNIT_DEFS[u.char];
+  if(!def)return;
+
+  const bagLv=topLevel(u.char);
+  let upgradeHint;
+  if(bagLv>u.lv)upgradeHint='字库中已有 Lv'+bagLv+'，去「字库」合成更高等级';
+  else if(bagLv===u.lv)upgradeHint='已是字库最高等级';
+  else upgradeHint='字库中暂无此字';
+
+  const refund=Math.round((u.cost||10)*0.5);
+
+  let html='<h3>'+def.icon+' '+def.name+' <span style="color:#c9a227;font-size:13px">Lv'+u.lv+'</span></h3>';
+  html+='<div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)">';
+  html+='<b style="font-size:13.5px">'+def.skName+'</b>';
+  html+='<p style="font-size:11.5px;color:#83978a;margin-top:6px;line-height:1.7">'+def.skDesc+'</p>';
+  html+='<p style="font-size:11.5px;color:#c9a227;margin-top:6px">冷却：'+def.sk+' 秒'+(u.char==='月'?'（三变循环 5/10/15 秒）':'')+'</p>';
+  html+='</div>';
+  html+='<p class="tip">'+upgradeHint+'</p>';
+  html+='<div style="display:flex;gap:8px">';
+  html+='<button type="button" class="btn-main" id="unitRemove" style="flex:1;padding:12px;font-size:13px;letter-spacing:1px;margin-top:0">返还 '+refund+'🍃</button>';
+  html+='<button type="button" class="btn-main" id="unitClose" style="flex:1;padding:12px;font-size:13px;letter-spacing:1px;margin-top:0;background:#e2e9e0;color:#5a6b5c;box-shadow:none">取消</button>';
+  html+='</div>';
+
+  openModal(html);
+
+  document.getElementById('unitClose').addEventListener('click',closeModal);
+  document.getElementById('unitRemove').addEventListener('click',function(){
+    S.tea+=refund;
+    slot.unit=null;
+    syncSlotUI();
+    closeModal();
+    toast('已拆除，返还 '+refund+' 🍃');
+    renderHand();
+    refreshUI();
+    save();
+  });
+}
+
+
+function clickSlot(i){
+  const slot=TD.slots[i];
+  if(!slot)return;
+  if(slot.unit){
+    showUnitInfo(i);
+    return;
+  }
+  if(!TD.selectedChar){toast('先在下方选择一个茶字');return;}
+  const c=TD.selectedChar;
+  const def=UNIT_DEFS[c];
+  if(!def){toast('该字无法上阵');return;}
+  const lv=topLevel(c);
+  const cost=def.cost+Math.max(0,lv-1)*3;
+  if(S.tea<cost){toast('茶叶不足');return;}
+  S.tea-=cost;
+
+  		slot.unit={char:c,lv:lv,cost:cost,cd:0,skillT:0,buffFastT:0,buffDmgT:0,heavyHit:false};
+  TD.selectedChar=null;
+  syncSlotUI();
+  renderHand();
+  refreshUI();
+  save();
+  if(c==='娲')toast('女娲降临，每隔片刻催熟茶树！');
+}
+
+function triggerSkill(slot){
+  const c=slot.unit.char;
+  const bonus=1+(slot.unit.lv-1)*0.15;
+
+  if(c==='茶'){
+    if(TD.baseHp<10){TD.baseHp=Math.min(10,TD.baseHp+1);refreshUI();}
+  }
+  else if(c==='绿'){
+    if(TD.baseHp<10){TD.baseHp=Math.min(10,TD.baseHp+Math.round(3*bonus));refreshUI();}
+    toast('绿茶使：生命之泉');
+  }
+  else if(c==='红'){
+    slot.unit.heavyHit=true;
+    toast('红茶卫：蓄力一击');
+  }
+  else if(c==='白'){
+    TD.monsters.forEach(function(m){if(!m.dead)m.slowT=Math.max(m.slowT,2);});
+    toast('白茶师：寒霜入茶，全场冻结');
+  }
+  else if(c==='黑'){
+    TD.monsters.forEach(function(m){if(!m.dead)damageMonster(m,8*bonus);});
+    toast('黑茶将：浓香一击');
+  }
+  else if(c==='青'){
+    for(let k=0;k<3;k++){
+      (function(k){
+        setTimeout(function(){
+          const target=TD.monsters.find(function(m){return !m.dead;});
+          if(target)damageMonster(target,unitDamage(slot.unit));
+        },k*140);
+      })(k);
+    }
+    toast('青茶侠：疾风三连');
+  }
+  else if(c==='黄'){
+    const target=TD.monsters.find(function(m){return !m.dead;});
+    if(target)damageMonster(target,unitDamage(slot.unit)*3,'#e6a020');
+    toast('黄茶仙：金光必暴');
+  }
+  else if(c==='花'){
+    if(TD.baseHp<10){TD.baseHp=Math.min(10,TD.baseHp+Math.round(4*bonus));refreshUI();}
+    TD.monsters.forEach(function(m){if(!m.dead)m.slowT=Math.max(m.slowT,1.5);});
+    toast('花茶使：百花酿');
+  }
+  else if(c==='龙'){
+    let target=null;
+    TD.monsters.forEach(function(m){if(!m.dead&&(!target||m.progress>target.progress))target=m;});
+    if(target)damageMonster(target,unitDamage(slot.unit)*2.5,'#3a7fd5');
+    toast('龙井客：龙吟一击');
+  }
+  else if(c==='普'){
+    TD.monsters.forEach(function(m){if(!m.dead)damageMonster(m,6*bonus);});
+    toast('普洱将：陈香翻涌');
+  }
+  else if(c==='蜜'){
+    TD.slots.forEach(function(s){if(s&&s.unit)s.unit.buffFastT=5;});
+    toast('蜜茶师：甘蜜润军，攻速提升');
+  }
+  else if(c==='神'){
+    if(TD.baseHp<10){TD.baseHp=Math.min(10,TD.baseHp+2);refreshUI();}
+    TD.monsters.forEach(function(m){if(!m.dead)damageMonster(m,4*bonus);});
+    toast('神农：尝百草，济苍生');
+  }
+  else if(c==='羽'){
+    TD.slots.forEach(function(s){if(s&&s.unit)s.unit.buffDmgT=4;});
+    toast('陆羽：著《茶经》，全军攻升');
+  }
+  else if(c==='仝'){
+    TD.monsters.forEach(function(m){if(!m.dead)m.slowT=Math.max(m.slowT,2);});
+    toast('卢仝：七碗茶歌，众怪失神');
+  }
+  else if(c==='轼'){
+    const list=TD.monsters.filter(function(m){return !m.dead;}).slice(0,2);
+    list.forEach(function(m){damageMonster(m,unitDamage(slot.unit)*2,'#9a5ad4');});
+    toast('苏轼：大江东去');
+  }
+  else if(c==='娲'){
+    triggerNuwa();
+  }
+  else if(c==='然'){
+    let target=null;
+    TD.monsters.forEach(function(m){if(!m.dead&&(!target||m.progress>target.progress))target=m;});
+    if(target){
+      damageMonster(target,unitDamage(slot.unit)*3,'#6ab8ff');
+      target.slowT=Math.max(target.slowT,2);
+    }
+    toast('皎然：禅定一击');
+  }
+  else if(c==='居'){
+    TD.monsters.forEach(function(m){if(!m.dead)damageMonster(m,7*bonus);});
+    toast('白居易：长恨歌');
+  }
+  else if(c==='徽'){
+    let lowest=null;
+    TD.monsters.forEach(function(m){if(!m.dead&&(!lowest||m.hp<lowest.hp))lowest=m;});
+    if(lowest)damageMonster(lowest,99999,'#c9182b');
+    toast('宋徽宗：御笔钦点');
+  }
+  else if(c==='清'){
+    TD.slots.forEach(function(s){if(s&&s.unit)s.unit.buffDmgT=4;});
+    toast('李清照：词压江南，全军攻升3');
+  }
+  else if(c==='真'){
+TD.monsters.forEach(function(m){if(m.dead)damageMonster(m,9*bonus,'#5aa87a');});
+    toast('吴理真：蒙顶种茶');
+  }
+else if(c==='月'){
+    const step=slot.unit.moonStep||0;
+    if(step===0){
+      TD.slots.forEach(function(s){if(s&&s.unit)s.unit.buffDmgT=Math.max(s.unit.buffDmgT||0,5);});
+      toast('月·月光普照');
+    }else if(step===1){
+      spawnMoonRabbit();
+      toast('月·月兔奔月');
+    }else if(step===2){
+      TD.monsters.forEach(function(m){
+        if(!m.dead){m.progress=Math.max(0,m.progress-1);updateMonsterPosition(m);}
+      });
+      toast('月·引力潮汐');
+    }
+    slot.unit.moonStep=((slot.unit.moonStep||0)+1)%3;
+  }
+  else if(c==='元'){
+    TD.slots.forEach(function(s){if(s&&s.unit)s.unit.skillT=0;});
+    toast('元旦钟：辞旧迎新');
+  }
+  else if(c==='春'){
+    TD.monsters.forEach(function(m){
+      if(!m.dead){
+        damageMonster(m,7*bonus,'#c9182b');
+        m.progress=Math.max(0,m.progress-1);
+        updateMonsterPosition(m);
+      }
+    });
+    toast('迎春使：爆竹迎春');
+  }
+  else if(c==='灯'){
+    TD.slots.forEach(function(s){
+      if(s&&s.unit&&s.unit.char!=='灯')s.unit.buffDmgT=Math.max(s.unit.buffDmgT||0,6);
+    });
+    toast('花灯使：灯火阑珊');
+  }
+  else if(c==='明'){
+    TD.monsters.forEach(function(m){if(!m.dead)m.slowT=Math.max(m.slowT,2);});
+    let t=null;
+    TD.monsters.forEach(function(m){if(!m.dead&&(!t||m.progress>t.progress))t=m;});
+    if(t)damageMonster(t,unitDamage(slot.unit)*3,'#5aa87a');
+    toast('清明师：明镜高悬');
+  }
+  else if(c==='劳'){
+    TD.slots.forEach(function(s){if(s&&s.unit)s.unit.buffFastT=Math.max(s.unit.buffFastT||0,6);});
+    toast('劳动使：劳动号子');
+  }
+  else if(c==='粽'){
+    spawnFlyer('🥮',{damage:8*bonus,speed:150});
+    toast('粽香使：粽叶飞梭');
+  }
+  else if(c==='鹊'){
+    spawnFlyer('🐦',{slow:2,speed:160});
+    toast('鹊桥使：鹊桥相会');
+  }
+  else if(c==='国'){
+    TD.slots.forEach(function(s){if(s&&s.unit)s.unit.buffDmgT=Math.max(s.unit.buffDmgT||0,8);});
+    toast('国运使：国泰民安');
+  }
+  else if(c==='菊'){
+    if(TD.baseHp<10){TD.baseHp=Math.min(10,TD.baseHp+5);refreshUI();}
+    TD.slots.forEach(function(s){if(s&&s.unit)s.unit.skillT=0;});
+    toast('菊寿使：重阳登高');
+  }
+  else if(c==='雪'){
+    TD.monsters.forEach(function(m){if(!m.dead)m.slowT=Math.max(m.slowT,3);});
+    toast('雪夜使：雪夜奇缘');
+  }
+}
+
+function fireProjectile(slot, target, def){
+  const layer=$('#monsterLayer');
+  if(!layer||!target)return;
+  const startX=(slot.col+0.5)*25;
+  const startY=(slot.row+0.5)*25;
+  const endX=(target.col+0.5)*25;
+  const endY=(target.row+0.5)*25;
+  const el=document.createElement('div');
+  el.style.position='absolute';
+  el.style.left=startX+'%';
+  el.style.top=startY+'%';
+  el.style.fontSize='16px';
+  el.style.zIndex='25';
+  el.style.pointerEvents='none';
+  el.style.transform='translate(-50%,-50%)';
+  el.style.transition='left .2s linear, top .2s linear';
+
+  let icon='🍃';
+  const c=slot.unit.char;
+  if(c==='绿'||c==='花')icon='💚';
+  else if(c==='红'||c==='春')icon='🧧';
+  else if(c==='白'||c==='雪')icon='❄️';
+  else if(c==='黑'||c==='普')icon='🌑';
+  else if(c==='青'||c==='龙')icon='💚';
+  else if(c==='黄')icon='⭐';
+  else if(c==='蜜')icon='🍯';
+  else if(c==='月')icon='🌙';
+  else if(c==='神')icon='🌾';
+  else if(c==='羽')icon='📜';
+  else if(c==='仝')icon='🍶';
+  else if(c==='轼')icon='🖋️';
+  else if(c==='然')icon='🕯️';
+  else if(c==='居')icon='🌺';
+  else if(c==='徽')icon='👑';
+  else if(c==='清')icon='💫';
+  else if(c==='真')icon='⛰️';
+  else if(c==='元')icon='🎊';
+  else if(c==='灯')icon='🏮';
+  else if(c==='明')icon='🕯️';
+  else if(c==='劳')icon='🔧';
+  else if(c==='粽')icon='🥮';
+  else if(c==='鹊')icon='🐦';
+  else if(c==='国')icon='🇨🇳';
+  else if(c==='菊')icon='🌼';
+  el.textContent=icon;
+
+  layer.appendChild(el);
+
+  requestAnimationFrame(function(){
+    el.style.left=endX+'%';
+    el.style.top=endY+'%';
+  });
+
+  setTimeout(function(){if(el.parentNode)el.remove();},250);
+}
+
+
+function spawnFlyer(emoji,opts){
+  opts=opts||{};
+  const layer=$('#monsterLayer');
+  if(!layer)return;
+  const el=document.createElement('div');
+  el.style.position='absolute';
+  el.style.fontSize=(opts.size||30)+'px';
+  el.style.zIndex='30';
+  el.style.transform='translate(-50%,-50%)';
+  el.style.transition='left .18s linear, top .18s linear';
+  el.style.left='12.5%';
+  el.style.top='12.5%';
+  el.style.pointerEvents='none';
+  el.textContent=emoji;
+  layer.appendChild(el);
+
+  let idx=0;
+  const timer=setInterval(function(){
+    idx++;
+    if(idx>=PATH.length){
+      clearInterval(timer);
+      if(el.parentNode)el.remove();
+      return;
+    }
+    const p=PATH[idx];
+    el.style.left=((p.col+0.5)*25)+'%';
+    el.style.top=((p.row+0.5)*25)+'%';
+    TD.monsters.forEach(function(m){
+      if(!m.dead&&Math.abs(m.row-p.row)<1&&Math.abs(m.col-p.col)<1){
+        if(opts.damage)damageMonster(m,opts.damage);
+        if(opts.slow)m.slowT=Math.max(m.slowT,opts.slow);
+      }
+    });
+  },opts.speed||180);
+}
+
+function spawnFestBoss(bossCfg,isBig){
+  const layer=$('#monsterLayer');
+  if(!layer)return;
+  const baseHp=12+TD.festMission.kills*3;
+  const hp=Math.round(baseHp*bossCfg.hpMul);
+  const el=document.createElement('div');
+  el.className='monster boss';
+  el.innerHTML='<div class="hp"><i></i></div><div class="body" style="font-size:'+(isBig?42:34)+'px">'+bossCfg.icon+'</div>';
+  const m={
+    el:el,progress:0,
+    hp:hp,maxhp:hp,
+    speed:isBig?0.22:0.32,
+    row:0,col:0,
+    slowT:0,dead:false,boss:true,
+    isFestBoss:true,isBigBoss:isBig
+  };
+  el.addEventListener('click',function(){hitMonster(m);});
+  layer.appendChild(el);
+  TD.monsters.push(m);
+  updateMonsterPosition(m);
+  toast(bossCfg.name+'降临！');
+}
+
+
+function spawnMoonRabbit(){
+  const layer=$('#monsterLayer');
+  if(!layer)return;
+  const el=document.createElement('div');
+  el.style.position='absolute';
+  el.style.fontSize='30px';
+  el.style.zIndex='30';
+  el.style.transform='translate(-50%,-50%)';
+  el.style.transition='left .2s linear, top .2s linear';
+  el.style.left='12.5%';
+  el.style.top='12.5%';
+  el.style.pointerEvents='none';
+  el.textContent='🐰';
+  layer.appendChild(el);
+  let idx=0;
+  const timer=setInterval(function(){
+    idx++;
+    if(idx>=PATH.length){
+      clearInterval(timer);
+      if(el.parentNode)el.remove();
+      return;
+    }
+    const p=PATH[idx];
+    el.style.left=((p.col+0.5)*25)+'%';
+    el.style.top=((p.row+0.5)*25)+'%';
+    TD.monsters.forEach(function(m){
+      if(!m.dead&&Math.abs(m.row-p.row)<1&&Math.abs(m.col-p.col)<1){
+        m.slowT=Math.max(m.slowT,2);
+      }
+    });
+  },180);
+}
+
+
+function spawnMonster(){
+  const layer=$('#monsterLayer');
+  if(!layer)return;
+  const cfg=TD.levelConfig;
+  const isBoss=cfg&&cfg.isBoss&&TD.kills===1;
+  let emojis=['🌿','🍄','🪴'];
+  const curFest=activeFestival();
+  let skinId=null;
+  if(TD.festMission.active&&TD.festMission.festId)skinId=TD.festMission.festId;
+  else if(curFest&&S.festSkins[curFest.id])skinId=curFest.id;
+  if(skinId&&FEST_MONSTER_SKINS[skinId])emojis=FEST_MONSTER_SKINS[skinId];
+  const types=[
+    {emoji:emojis[0],hp:1.0,spd:0.55},
+    {emoji:emojis[1],hp:1.5,spd:0.45},
+    {emoji:emojis[2],hp:2.2,spd:0.36}
+  ];
+  const t=types[Math.min(types.length-1,Math.floor(Math.random()*(1+TD.wave/3)))];
+  const cfgMul=cfg?cfg.hpMul:1;
+  const maxhp=Math.round((6+TD.wave*4)*t.hp*cfgMul*(isBoss?8:1));
+  const el=document.createElement('div');
+  el.className='monster'+(isBoss?' boss':'');
+  el.innerHTML='<div class="hp"><i></i></div><div class="body">'+(isBoss?'👹':t.emoji)+'</div>';
+  const m={
+    el:el,progress:0,
+    hp:maxhp,maxhp:maxhp,
+    speed:t.spd*(isBoss?0.7:1),
+    row:0,col:0,
+    slowT:0,dead:false,boss:isBoss
+  };
+  el.addEventListener('click',function(){hitMonster(m);});
+  layer.appendChild(el);
+  TD.monsters.push(m);
+  updateMonsterPosition(m);
+}
+
+function updateMonsterPosition(m){
+  const idx=Math.floor(m.progress);
+  const frac=m.progress-idx;
+  const a=PATH[Math.min(idx,PATH.length-1)];
+  const b=PATH[Math.min(idx+1,PATH.length-1)];
+  m.row=a.row+(b.row-a.row)*frac;
+  m.col=a.col+(b.col-a.col)*frac;
+  m.el.style.left=((m.col+0.5)*25)+'%';
+  m.el.style.top=((m.row+0.5)*25)+'%';
+}
+  
+function getTalentCount(name){
+  if(!S.talentCards || !S.talentCards[name]) return 0;
+  const base = S.talentCards[name].count;
+  if(name === '世界树的祝福') return base;
+  const worldTree = S.talentCards['世界树的祝福'] ? S.talentCards['世界树的祝福'].count : 0;
+  return base * (1 + worldTree * 0.5);
+}
+
+function unitDamage(u, m){
+  const def=UNIT_DEFS[u.char]||{dmg:2};
+  let dmg=(def.dmg+(u.lv-1)*2)*(1+S.equip.pestle*0.15);
+  if(u.buffDmgT>0)dmg*=1.5;
+  let atkBonus = 0.12 * getTalentCount('利刃加持');
+  let bossBonus = (m && m.boss) ? (0.30 * getTalentCount('法穿铭文')) : 0;
+  dmg *= (1 + atkBonus + bossBonus);
+  return dmg;
+}
+
+function hitMonster(m){
+  if(m.dead)return;
+  const d=2+topLevel('茶')+(S.equip.pestle*2);
+  damageMonster(m,d);
+}
+function damageMonster(m,dmg,color){
+  if(m.dead||!m.el)return;
+  m.hp-=dmg;
+  const bar=m.el.querySelector('.hp i');
+  if(bar)bar.style.width=Math.max(0,m.hp/m.maxhp*100)+'%';
+  m.el.classList.add('hurt');
+  setTimeout(function(){if(m.el)m.el.classList.remove('hurt');},100);
+  if(dmg>0){
+    const r=m.el.getBoundingClientRect();
+    floatText(r.left+r.width/2-8,r.top-4,'-'+Math.round(dmg),color||'#e0453a');
+  }
+  if(m.hp<=0)killMonster(m);
+}
+function killMonster(m){
+  m.dead=true;
+  if(m.el)m.el.remove();
+  const gain=m.boss?15:3;
+  S.tea+=gain;
+  S.kills++;
+  if(TD.festMission.active){
+    TD.festMission.kills++;
+    const fm=TD.festMission;
+    const fmap=FEST_MAPS[fm.festId];
+    if(fmap){
+      if(!fm.miniBossSpawned&&fm.kills===fmap.miniBoss.atKill){
+        fm.miniBossSpawned=true;
+        setTimeout(function(){spawnFestBoss(fmap.miniBoss,false);},300);
+      }
+      if(!fm.bossSpawned&&fm.kills===fmap.boss.atKill){
+        fm.bossSpawned=true;
+        setTimeout(function(){spawnFestBoss(fmap.boss,true);},300);
+      }
+    }
+    if(fm.kills>=fm.target){
+      setTimeout(winFestMission,400);
+    }
+  }
+  TD.kills++;
+  TD.waveKills=(TD.waveKills||0)+1;
+  if(Math.random()<(m.boss?0.9:0.35))dropChar();
+const targetKills=TD.levelConfig?TD.levelConfig.targetKills:24;
+  if(TD.levelConfig&&!TD.festMission.active&&TD.kills>=targetKills){
+    setTimeout(completeLevel,400);
+    return;
+  }
+	if(TD.waveKills>=TD.waveTarget){
+    TD.waveKills=0;
+    TD.wave++;
+    TD.waveTarget=Math.min(60,Math.ceil(TD.waveTarget*1.5));
+    TD.waveSpawned=0;
+    if(TD.wave>S.bestWave){S.bestWave=TD.wave;submitScore();}
+    toast('第 '+TD.wave+' 波来袭！· 需击杀 '+TD.waveTarget+' 只');
+  }
+  save();
+  refreshUI();
+}
+function leakMonster(m){
+  m.dead=true;
+  if(m.el)m.el.remove();
+  TD.baseHp-=1;
+  toast('杂草怪突破！茶楼 -1 ❤️');
+  if(TD.baseHp<=0){
+    toast('茶楼被攻破，返回茶山休整…');
+    setTimeout(function(){
+      TD.baseHp=10;TD.wave=1;TD.kills=1;TD.waveKills=0;TD.waveTarget=8;TD.waveSpawned=0;
+      clearMonsters();
+      go('screen-mountain');
+    },900);
+  }
+  refreshUI();
+}
+
+function startFestMission(){
+  const fest=activeFestival();
+  if(!fest){toast('当前没有节日，无法开启');return;}
+  if(!S.unlockedFests[fest.id]){toast('需要先集齐'+fest.name+'专属字');return;}
+  TD.festMission={active:true,festId:fest.id,kills:0,target:20};
+  TD.baseHp=10;TD.wave=1;TD.kills=1;TD.waveKills=0;TD.waveTarget=8;TD.waveSpawned=0;
+  clearMonsters();
+  toast('节日任务开启！击退 '+TD.festMission.target+' 只节日怪');
+  refreshUI();
+}
+
+function winFestMission(){
+  const fid=TD.festMission.festId;
+  S.festSkins[fid]=true;
+  TD.festMission.active=false;
+  const fest=FESTIVALS.find(function(f){return f.id===fid;});
+  save();
+  openModal('<div class="celebrate">'+
+    '<div class="big">🎉</div>'+
+    '<span class="fest-tag">'+fest.name+'任务完成</span>'+
+    '<h3>获得「'+fest.name+'」怪物皮肤！</h3>'+
+    '<p>之后每次进入溪谷小径，<br>怪物都会变成'+fest.emoji+'节日形态。</p>'+
+    '<button type="button" class="btn-main" id="festWinOk">收下奖励</button>'+
+  '</div>');
+  const ok=document.getElementById('festWinOk');
+  if(ok)ok.addEventListener('click',function(){
+    closeModal();
+    clearMonsters();
+  });
+  refreshUI();
+}
+
+
+function clearMonsters(){
+  TD.monsters.forEach(function(m){if(m.el)m.el.remove();});
+  TD.monsters=[];
+}
+
+/* ---------- 女娲催熟 ---------- */
+let nuwaAcc=0;
+function triggerNuwa(){
+  let matured=0;
+  trees.forEach(function(t){
+    if(t.cd>0){
+      t.cd=0;
+      t.el.classList.remove('cool');
+      t.el.classList.add('mature');
+      const cd=t.el.querySelector('.cd');
+      if(cd)cd.style.height='0%';
+      setTimeout(function(){t.el.classList.remove('mature');},800);
+      matured++;
+    }
+  });
+  if(matured>0)toast('女娲催熟，茶树瞬间可采！');
+}
+
+/* ---------- 字库 ---------- */
+
+function autoMergeAll(){
+  const all=ALL_CHARS.concat(FEST_CHARS);
+  let totalMerged=0;
+  all.forEach(function(c){
+    if(!S.bag[c])return;
+    let changed=true;
+    while(changed){
+      changed=false;
+      for(let i=0;i<MAX_LV-1;i++){
+        if(S.bag[c][i]>=2){
+          const pairs=Math.floor(S.bag[c][i]/2);
+          S.bag[c][i]-=pairs*2;
+          S.bag[c][i+1]+=pairs;
+          totalMerged+=pairs;
+          changed=true;
+        }
+      }
+    }
+  });
+  if(totalMerged>0){
+    save();
+    checkFestUnlock();
+    refreshUI();
+    renderHand();
+    toast('一键合成：合并 '+totalMerged+' 次');
+    setTimeout(function(){renderBag();},100);
+  }else{
+    toast('没有可合成的印记');
+  }
+}
+
+function utf8ToBase64(str){
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function base64ToUtf8(b64){
+  return decodeURIComponent(escape(atob(b64)));
+}
+
+function openSaveCode(){
+  let code='';
+  try{
+    const raw=localStorage.getItem('chashan_v4')||JSON.stringify(S);
+    code=utf8ToBase64(raw);
+  }catch(e){code='(生成失败)';}
+
+  const lake=S.progress&&S.progress.lake?Math.max(0,S.progress.lake-1):0;
+  const preview='茶叶 '+S.tea+' · 茶楼 Lv.'+S.houseLevel+' · 云湖 '+lake+'/50';
+
+  const html=
+    '<h3>💾 存档码</h3>'+
+    '<p class="tip">'+preview+'</p>'+
+    '<p class="tip">① 点下方文本 → 全选 → 复制 → 存到备忘录。<br>② 换设备时把存档码粘贴到下面第二个框，点「恢复」。</p>'+
+    '<textarea id="saveCodeOut" readonly style="width:100%;height:80px;font-size:10px;padding:8px;border-radius:10px;border:1px solid #d8e5da;resize:none;font-family:monospace;background:#f8faf7;color:#3a5544;word-break:break-all">'+code+'</textarea>'+
+    '<p class="tip" style="margin-top:14px">恢复存档：把存档码粘贴到这里</p>'+
+    '<textarea id="saveCodeIn" placeholder="粘贴存档码…" style="width:100%;height:60px;font-size:10px;padding:8px;border-radius:10px;border:1px solid #d8e5da;resize:none;font-family:monospace;background:#fff;color:#3a5544"></textarea>'+
+    '<div style="display:flex;gap:8px;margin-top:12px">'+
+      '<button type="button" class="btn-main" id="saveRestore" style="flex:1;padding:12px;font-size:13px;letter-spacing:1px;margin-top:0">恢复存档</button>'+
+      '<button type="button" class="btn-main" id="saveClose" style="flex:1;padding:12px;font-size:13px;letter-spacing:1px;margin-top:0;background:#e2e9e0;color:#5a6b5c;box-shadow:none">关闭</button>'+
+    '</div>';
+  openModal(html);
+
+  const out=document.getElementById('saveCodeOut');
+  if(out){
+    out.addEventListener('click',function(){
+      out.select();
+      try{document.execCommand('copy');toast('已复制到剪贴板');}catch(e){toast('请长按手动复制');}
+    });
+  }
+  document.getElementById('saveClose').addEventListener('click',closeModal);
+  document.getElementById('saveRestore').addEventListener('click',function(){
+    const ta=document.getElementById('saveCodeIn');
+    if(!ta||!ta.value.trim()){toast('请先粘贴存档码');return;}
+    restoreSaveCode(ta.value.trim());
+  });
+}
+
+function restoreSaveCode(code){
+  try{
+    const raw=base64ToUtf8(code);
+    const data=JSON.parse(raw);
+    if(!data||typeof data!=='object')throw new Error('无效');
+    Object.keys(data).forEach(function(k){S[k]=data[k];});
+    save();
+    closeModal();
+    toast('存档已恢复，即将刷新…');
+    setTimeout(function(){location.reload();},800);
+  }catch(e){
+    toast('存档码无效或已损坏');
+  }
+}
+
+
+function confirmReset(){
+  openModal('<div class="celebrate">'+
+    '<div class="big">⚠️</div>'+
+    '<h3>确定要重置存档吗？</h3>'+
+    '<p>所有茶叶、印记、关卡进度、节日皮肤、装备等级<br>都会清空，<b style="color:#c9182b">无法恢复</b>。</p>'+
+    '<div style="display:flex;gap:8px">'+
+      '<button type="button" class="btn-main" id="resetConfirm" style="flex:1;padding:12px;font-size:13px;letter-spacing:1px;margin-top:0;background:linear-gradient(135deg,#ff8a8a,#c9182b);color:#fff;box-shadow:none">确定重置</button>'+
+      '<button type="button" class="btn-main" id="resetCancel" style="flex:1;padding:12px;font-size:13px;letter-spacing:1px;margin-top:0;background:#e2e9e0;color:#5a6b5c;box-shadow:none">取消</button>'+
+    '</div>'+
+  '</div>');
+  document.getElementById('resetCancel').addEventListener('click',closeModal);
+  document.getElementById('resetConfirm').addEventListener('click',doReset);
+}
+
+function doReset(){
+  try{localStorage.removeItem('chashan_v4');}catch(e){}
+  S.tea=30;
+  S.bag={};
+  S.houseLevel=0;
+  S.houseProg=0;
+  S.equip={basket:0,pestle:0,pot:0};
+  S.lastSign='';
+  S.signStreak=0;
+  S.unlockedFests={};
+  S.festSkins={};
+  S.bestWave=0;
+  S.kills=0;
+  S.progress={lake:1,waterfall:0,forest:0};
+  BASE_CHARS.forEach(function(c){S.bag[c]=new Array(MAX_LV).fill(0);});
+  [...BASE_CHARS,...MYTH_CHARS,...FEST_CHARS].forEach(function(c){
+    if(!S.bag[c])S.bag[c]=new Array(MAX_LV).fill(0);
+  });
+  FESTIVALS.forEach(function(f){
+    f.chars.forEach(function(c){
+      if(!S.bag[c])S.bag[c]=new Array(MAX_LV).fill(0);
+    });
+  });
+  S.bag['茶'][0]=1;
+  TD.curChapter='lake';
+  TD.curLevel=1;
+  TD.levelConfig=null;
+  TD.festMission={active:false,festId:null,kills:0,target:9};
+  TD.slots.forEach(function(s){if(s)s.unit=null;});
+  clearMonsters();
+  save();
+  closeModal();
+  refreshUI();
+  if(typeof renderHand==='function')renderHand();
+  toast('存档已重置');
+  go('screen-home');
+}
+
+
+let actx=null;
+let sfxLast={};
+function initAudio(){
+  if(actx)return;
+  try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}
+}
+function beep(freq,dur,type,vol,sweep){
+  try{
+    if(!actx || actx.state==='suspended'){
+      try{ if(actx) actx.close(); }catch(e){}
+      actx=new (window.AudioContext||window.webkitAudioContext)();
+    }
+    const o=actx.createOscillator();
+    const g=actx.createGain();
+    o.type=type||'sine';
+    o.frequency.value=freq;
+    const t0=actx.currentTime;
+    if(sweep)o.frequency.exponentialRampToValueAtTime(Math.max(sweep,1),t0+dur);
+    g.gain.setValueAtTime(vol||0.12,t0);
+    g.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+    o.connect(g);g.connect(actx.destination);
+    o.start(t0);o.stop(t0+dur);
+  }catch(e){}
+}
+function sfxThrottle(key,minGap){
+  const now=Date.now();
+  if(sfxLast[key]&&now-sfxLast[key]<(minGap||60))return false;
+  sfxLast[key]=now;
+  return true;
+}
+const SFX={
+  pick:function(){initAudio();beep(900,0.08,'triangle',0.14,1300);},
+  leaf:function(){beep(500,0.14,'sine',0.07,300);},
+  merge:function(){beep(523,0.1,'triangle',0.14);setTimeout(function(){beep(659,0.1,'triangle',0.14);},80);setTimeout(function(){beep(784,0.14,'triangle',0.14);},160);},
+  attack:function(){if(!sfxThrottle('atk',80))return;beep(320,0.04,'square',0.05,180);},
+  kill:function(){if(!sfxThrottle('kill',120))return;beep(380,0.12,'sine',0.1,120);},
+  bossKill:function(){beep(150,0.4,'sawtooth',0.18,50);setTimeout(function(){beep(300,0.3,'sine',0.13,100);},150);setTimeout(function(){beep(600,0.4,'triangle',0.14,200);},300);},
+  complete:function(){beep(523,0.15,'sine',0.14);setTimeout(function(){beep(659,0.15,'sine',0.14);},120);setTimeout(function(){beep(784,0.15,'sine',0.14);},240);setTimeout(function(){beep(1047,0.3,'sine',0.14);},360);},
+  buy:function(){beep(1200,0.06,'square',0.1);setTimeout(function(){beep(1600,0.1,'square',0.1);},50);},
+  click:function(){if(!sfxThrottle('click',40))return;beep(600,0.03,'square',0.05);},
+  error:function(){if(!sfxThrottle('err',200))return;beep(200,0.14,'sawtooth',0.1,150);},
+  festival:function(){beep(523,0.15,'triangle',0.13);setTimeout(function(){beep(784,0.15,'triangle',0.13);},100);setTimeout(function(){beep(1047,0.22,'triangle',0.13);},200);},
+  mission:function(){beep(659,0.12,'triangle',0.13);setTimeout(function(){beep(880,0.12,'triangle',0.13);},90);setTimeout(function(){beep(1175,0.25,'triangle',0.13);},180);}
+};
+
+function ensureAudioOn(){
+  initAudio();
+  if(actx&&actx.state==='suspended'){try{actx.resume();}catch(e){}}
+}
+document.addEventListener('touchstart',ensureAudioOn,{passive:true});
+document.addEventListener('click',ensureAudioOn);
+document.addEventListener('touchend',ensureAudioOn,{passive:true});
+
+
+const TALENT_POOL=[
+  {r:'white',t:'朴实之力',d:'采茶时 5% 概率额外 +1 茶叶'},
+  {r:'white',t:'轻快步伐',d:'茶树冷却 -5%'},
+  {r:'green',t:'熟练采集',d:'采茶时 10% 概率额外掉一个字'},
+  {r:'green',t:'坚韧体魄',d:'茶楼基础生命 +2'},
+  {r:'blue',t:'技能强化',d:'单位技能冷却 -10%'},
+  {r:'blue',t:'利刃加持',d:'全场单位伤害 +12%'},
+  {r:'blue',t:'速攻节奏',d:'全场单位攻速 +15%'},
+  {r:'purple',t:'暴击之心',d:'单位暴击伤害 +50%'},
+  {r:'purple',t:'法穿铭文',d:'对 BOSS 伤害 +30%'},
+  {r:'purple',t:'双倍幸运',d:'掉落字时 15% 概率给 2 个'},
+  {r:'gold',t:'茶神之赐',d:'节日加成再 +50%'},
+  {r:'gold',t:'永恒之火',d:'茶楼每秒产茶 +2'},
+  {r:'rainbow',t:'世界树的祝福',d:'所有天赋效果 ×1.5'}
+];
+
+function rollTalentRarity(){
+  const r=Math.random();
+  if(r<0.001)return 'rainbow';
+  if(r<0.021)return 'gold';
+  if(r<0.121)return 'purple';
+  if(r<0.341)return 'blue';
+  if(r<0.641)return 'green';
+  return 'white';
+}
+
+function draw3Talents(){
+  const arr=[];
+  for(let i=0;i<3;i++){
+    const rar=rollTalentRarity();
+    const pool=TALENT_POOL.filter(function(t){return t.r===rar;});
+    const pick=pool[Math.floor(Math.random()*pool.length)];
+    arr.push(pick);
+  }
+  return arr;
+}
+
+function towerUpgradeCost(){
+  return 60+(S.towerLevel||0)*30;
+}
+
+function charUpgradeCost(c){
+  const lv=S.charEvoLv[c]||0;
+  return Math.floor(60+30*lv);
+}
+
+function openEvo(){
+  go('screen-evo');
+  renderEvo();
+}
+
+function renderEvo(){
+  if(!S.towerLevel)S.towerLevel=0;
+  if(!S.charEvoLv)S.charEvoLv={};
+  if(!S.talentCards)S.talentCards={};
+
+  const tw=document.getElementById('evoTowerCard');
+  if(tw){
+    const cost=towerUpgradeCost();
+    const can=S.tea>=cost;
+    const buffPct=(S.towerLevel*5);
+    tw.className='evo-tower';
+    tw.innerHTML=
+      '<div class="tt">🏯 山间茶楼</div>'+
+      '<div class="lv">Lv.'+S.towerLevel+' · 全场伤害 +'+buffPct+'%</div>'+
+      '<div class="desc">每升 1 级，全场单位伤害 +5%。<br>每 30 级解锁一次茶楼专属大招。</div>'+
+      '<button type="button" id="btnTowerUp" '+(can?'':'disabled')+'>升级 Lv.'+(S.towerLevel+1)+' · 花费 '+cost+' 🍃</button>';
+    const bu=document.getElementById('btnTowerUp');
+    if(bu&&can)bu.addEventListener('click',doTowerUpgrade);
+  }
+
+  const g=document.getElementById('evoGrid');
+  if(!g)return;
+  g.innerHTML='';
+  const allChars=Object.keys(UNIT_DEFS);
+  allChars.forEach(function(c){
+    const lv=S.charEvoLv[c]||0;
+    const def=UNIT_DEFS[c];
+    if(!def)return;
+    const d=document.createElement('div');
+    d.className='evo-card'+(lv>0?'':' locked');
+    d.innerHTML='<div class="ic">'+def.icon+'</div>'+
+      '<div class="nm">'+def.name+'</div>'+
+      '<div class="el">Lv.'+lv+'</div>';
+    d.addEventListener('click',function(){showCharEvo(c);});
+    g.appendChild(d);
+  });
+
+  // --- 天赋列表展示 ---
+  let talentHtml = '<h3 style="font-size:13px;margin:16px 0 8px;color:#456a52;font-weight:600">🎴 已获得天赋</h3><div style="background:#fff;border-radius:14px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)">';
+  let hasTalent = false;
+  for(let name in S.talentCards){
+    if(S.talentCards[name].count > 0){
+      hasTalent = true;
+      let rar = S.talentCards[name].r || 'white';
+      talentHtml += '<div class="talent-card talent-'+rar+'" style="margin-bottom:6px;padding:8px 12px"><div class="tn">'+name+' Lv.'+S.talentCards[name].count+'</div></div>';
+    }
+  }
+  if(!hasTalent) talentHtml += '<p class="tip" style="margin:0">暂无天赋，去抽卡吧！</p>';
+  talentHtml += '</div>';
+  
+const gEl = document.getElementById('evoGrid');
+    if(gEl && gEl.parentNode){
+      // 先移除旧的天赋列表，防止重复堆积
+      const oldBox = document.getElementById('talentListBox');
+      if(oldBox) oldBox.remove();
+      // 再重新插入新的天赋列表，并给它加上一个唯一的ID包裹起来
+      gEl.parentNode.insertAdjacentHTML('beforeend', '<div id="talentListBox">' + talentHtml + '</div>');
+   }
+}
+
+function doTowerUpgrade(){
+  const cost=towerUpgradeCost();
+  if(S.tea<cost){SFX.error();toast('茶叶不足');return;}
+  S.tea-=cost;
+  S.towerLevel++;
+  save();
+  refreshUI();
+  renderEvo();
+  SFX.buy();
+  if(S.towerLevel%30===0){
+    setTimeout(function(){offerTalents('茶楼达到 Lv.'+S.towerLevel+'，获得进化奖励！');},300);
+  }else{
+    toast('茶楼升级到 Lv.'+S.towerLevel);
+  }
+}
+
+function showCharEvo(c){
+  const def=UNIT_DEFS[c];
+  if(!def)return;
+  const lv=S.charEvoLv[c]||0;
+  const cost=charUpgradeCost(c);
+  const can=S.tea>=cost;
+  const dmgBonus=(lv*3);
+  const skBonus=Math.floor(lv/3);
+
+  let html='<div class="char-evo-detail">'+
+    '<div class="big-icon">'+def.icon+'</div>'+
+    '<div class="cname">'+def.name+'</div>'+
+    '<div class="clv">进化 Lv.'+lv+'</div>'+
+    '<div class="evo-skill-box">'+
+      '<h4>当前加成</h4>'+
+      '<p>基础伤害 +'+dmgBonus+'%<br>技能效果 +'+skBonus+' 段</p>'+
+    '</div>'+
+    '<div class="evo-skill-box">'+
+      '<h4>下一个进化</h4>'+
+      '<p>'+(((lv+1)%3===0)?'<b style="color:#c9182b">小进化！</b><br>伤害再 +3%，技能效果 +1':'伤害 +3%')+
+      '<br>还差 '+((3-(lv%3))||3)+' 级触发小进化</p>'+
+    '</div>';
+  if(lv>0&&lv%30===0){
+    html+='<div class="evo-skill-box" style="background:#ffe9a8">'+
+      '<h4>🎉 已达大进化节点</h4>'+
+      '<p>可领取 1 次天赋抽取机会</p>'+
+    '</div>';
+  }
+  html+='<button type="button" class="btn-main" id="charUpBtn" '+(can?'':'disabled')+' style="padding:12px;font-size:13px;letter-spacing:1px;margin-top:8px">升级 Lv.'+(lv+1)+' · 花费 '+cost+' 🍃</button>'+
+  '</div>';
+  openModal(html);
+
+  const bu=document.getElementById('charUpBtn');
+  if(bu&&can)bu.addEventListener('click',function(){
+    S.tea-=cost;
+    S.charEvoLv[c]=lv+1;
+    save();
+    refreshUI();
+    renderEvo();
+    SFX.buy();
+    const newLv=lv+1;
+          if(newLv%30===0){
+            closeModal();
+            setTimeout(function(){offerTalents(def.name+' 达到 Lv.'+newLv+'，大进化！');},300);
+          }else{
+            // 不关闭弹窗，直接刷新当前弹窗内容，实现连续升级
+            showCharEvo(c);
+            if(newLv%3===0){
+              toast(def.name+' 小进化！Lv.'+newLv);
+            }else{
+              toast(def.name+' 进化到 Lv.'+newLv);
+            }
+          }
+  });
+}
+
+function offerTalents(reason){
+  const cards=draw3Talents();
+  let html='<div class="celebrate" style="text-align:left">'+
+    '<div style="text-align:center;margin-bottom:12px">'+
+      '<div class="big">🎴</div>'+
+      '<h3 style="text-align:center">'+reason+'</h3>'+
+      '<p style="text-align:center;font-size:11.5px;color:#83978a;margin:6px 0 14px">从 3 张天赋卡中选择 1 张</p>'+
+    '</div>';
+  cards.forEach(function(c,i){
+    html+='<div class="talent-card talent-'+c.r+'" data-idx="'+i+'">'+
+      '<div class="tr">'+c.r.toUpperCase()+'</div>'+
+      '<div class="tn">'+c.t+'</div>'+
+      '<div class="td">'+c.d+'</div>'+
+    '</div>';
+  });
+  html+='</div>';
+  openModal(html);
+
+  modalBody.querySelectorAll('.talent-card').forEach(function(el){
+    el.addEventListener('click',function(){
+      const idx=parseInt(el.dataset.idx,10);
+      const card=cards[idx];
+      if(!S.talentCards[card.t])S.talentCards[card.t]={count:0,r:card.r};
+      S.talentCards[card.t].count++;
+      save();
+      closeModal();
+      SFX.festival();
+      toast('获得天赋：'+card.t);
+      renderEvo();
+    });
+  });
+}
+
+
+function openBag(){renderBag();}
+
+function renderBag(){
+  const fest=activeFestival();
+  let html='<h3>🀄 字库 · 兵营</h3>';
+  html+='<button type="button" class="btn-main" id="btnAutoMerge" style="margin-bottom:12px;padding:12px;font-size:14px;letter-spacing:2px">🀄 一键合成所有印记</button>';
+  html+='<p class="tip">两个<b>同字同级</b>印记可合成升级 · 最高 9 级 · 等级越高，上阵单位越强</p>';
+
+  if(fest){
+    const got=fest.chars.filter(function(c){return topLevel(c)>=1;}).length;
+    html+='<div class="char-row" style="background:#fff8e2">'+
+      '<div class="char-big fest">'+fest.emoji+'</div>'+
+      '<div class="char-levels">'+
+        '<span class="lv" style="background:'+fest.color+';color:#fff">'+fest.name+'</span>'+
+        '<span class="lv">'+fest.chars.join(' ')+'</span>'+
+        '<span class="lv">收集 '+got+'/'+fest.chars.length+'</span>'+
+      '</div></div>';
+  }
+
+  html+='<h3 style="font-size:13px;margin-top:14px;color:#456a52">🍵 基础茶字</h3>';
+  BASE_CHARS.forEach(function(c){html+=renderCharRow(c,false,false);});
+
+html+='<h3 style="font-size:13px;margin-top:14px;color:#c9182b">👤 历史 · 神话人物</h3>';
+  MYTH_CHARS.forEach(function(c){html+=renderCharRow(c,true,false);});
+
+  html+='<h3 style="font-size:13px;margin-top:14px;color:#e6a020">🎊 节日专属字</h3>';
+  FEST_CHARS.forEach(function(c){
+    const isCurFest=fest&&fest.chars.indexOf(c)>=0;
+    html+=renderCharRow(c,false,isCurFest);
+  });
+
+  openModal(html);
+
+  /* 用事件委托绑定弹窗内按钮，避免内联onclick */
+ 
+const bam=document.getElementById('btnAutoMerge');
+  if(bam)bam.addEventListener('click',autoMergeAll);
+
+
+modalBody.querySelectorAll('.char-btns button[data-act]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      const act=btn.dataset.act;
+      const ch=btn.dataset.ch;
+      if(act==='merge')merge(ch);
+      else if(act==='ad')adUp(ch);
+      else if(act==='quiz')quiz(ch);
+    });
+  });
+}
+
+function renderCharRow(c,isMyth,isFest){
+  const a=S.bag[c]||new Array(MAX_LV).fill(0);
+  let lvs='';
+  for(let i=MAX_LV-1;i>=0;i--){
+    if(a[i]>0)lvs+='<span class="lv">Lv'+(i+1)+' ×'+a[i]+'</span>';
+  }
+  if(!lvs)lvs='<span class="lv empty">暂无</span>';
+  const unit=UNIT_DEFS[c];
+
+  return '<div class="char-row">'+
+    '<div class="char-big'+(isMyth?' myth':'')+(isFest?' fest':'')+'">'+c+'</div>'+
+    '<div class="char-levels">'+lvs+
+      (unit?'<span class="lv" style="background:#dcecdf">'+unit.icon+unit.name+'</span>':'')+
+    '</div>'+
+    '<div class="char-btns">'+
+      '<button type="button" data-act="merge" data-ch="'+c+'">合成</button>'+
+      '<button type="button" data-act="ad" data-ch="'+c+'">广告</button>'+
+      '<button type="button" data-act="quiz" data-ch="'+c+'">答题</button>'+
+    '</div>'+
+  '</div>';
+}
+
+function merge(c){
+  const a=S.bag[c];
+  if(!a)return;
+  for(let i=MAX_LV-2;i>=0;i--){
+    if(a[i]>=2){
+      a[i]-=2;
+      a[i+1]+=1;
+      toast('合成成功！「'+c+'」Lv'+(i+2));
+      checkFestUnlock();
+      save();
+      renderBag();
+      refreshUI();
+      renderHand();
+      return;
+    }
+  }
+  toast('没有可合成的同字同级印记');
+}
+function adUp(c){
+  showAd(function(){
+    const lv=Math.max(1,topLevel(c));
+    addChar(c,Math.min(lv+1,MAX_LV));
+    toast('广告奖励：「'+c+'」+1');
+    checkFestUnlock();
+    save();
+    renderBag();
+    refreshUI();
+    renderHand();
+  });
+}
+
+let currentQuiz=null;
+function quiz(c){
+  const q=QUIZ_POOL[Math.floor(Math.random()*QUIZ_POOL.length)];
+  currentQuiz={q:q,c:c};
+  let html='<h3>📖 茶知识问答</h3>'+
+    '<p class="tip">答对即可获得「'+c+'」高级印记一枚</p>'+
+    '<div style="font-size:14px;font-weight:600;margin-bottom:14px;line-height:1.7">'+q.q+'</div>';
+  q.a.forEach(function(opt,i){
+    html+='<button type="button" class="quiz-opt" data-idx="'+i+'">'+
+      String.fromCharCode(65+i)+'. '+opt+'</button>';
+  });
+  openModal(html);
+
+  modalBody.querySelectorAll('.quiz-opt').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      const pick=parseInt(btn.dataset.idx,10);
+      answerQuiz(pick,c);
+    });
+  });
+}
+function answerQuiz(pick,c){
+  if(!currentQuiz||currentQuiz.c!==c)return;
+  const q=currentQuiz.q;
+  const right=q.r;
+  const btns=modalBody.querySelectorAll('.quiz-opt');
+  btns.forEach(function(b,i){
+    b.disabled=true;
+    if(i===right)b.classList.add('right');
+    else if(i===pick)b.classList.add('wrong');
+  });
+  if(pick===right){
+    const lv=Math.max(1,topLevel(c));
+    addChar(c,Math.min(lv+1,MAX_LV));
+    toast('答对啦！印记 +1');
+    setTimeout(function(){
+      checkFestUnlock();
+      save();
+      renderBag();
+      refreshUI();
+      renderHand();
+    },700);
+  }else{
+    setTimeout(function(){
+      openModal('<div class="celebrate">'+
+        '<div class="big">😅</div>'+
+        '<h3>差一点点</h3>'+
+        '<p>正确答案是「'+String.fromCharCode(65+right)+'」。<br>再来一次吧，茶山不赶时间。</p>'+
+        '<button type="button" class="btn-main" id="retryQuiz">再答一题</button>'+
+      '</div>');
+      const rb=document.getElementById('retryQuiz');
+      if(rb)rb.addEventListener('click',function(){quiz(c);});
+    },800);
+  }
+}
+
+function checkFestUnlock(){
+  const fest=activeFestival();
+  if(!fest||S.unlockedFests[fest.id])return;
+  const ok=fest.chars.every(function(c){return topLevel(c)>=1;});
+  if(!ok)return;
+  S.unlockedFests[fest.id]=true;
+  save();
+  setTimeout(function(){
+    openModal('<div class="celebrate">'+
+      '<div class="big">'+fest.emoji+'</div>'+
+      '<span class="fest-tag">'+fest.name+'专属</span>'+
+      '<h3>「'+fest.chars.join(' ')+'」集齐！</h3>'+
+      '<p>节日限定的茶字已加入字库，<br>采茶收益提升 50%，专属单位可上阵！</p>'+
+      '<button type="button" class="btn-main" id="festOk">收下这份茶礼</button>'+
+    '</div>');
+    const ok=document.getElementById('festOk');
+    if(ok)ok.addEventListener('click',closeModal);
+  },400);
+}
+
+/* ---------- 排行榜 / 商店 / 签到 ---------- */
+const RANK_API='https://jsonblob.com/api/jsonBlob/01a0f5bb-e0eb-793b-8e55-3617183dc091';
+
+function getPlayerName(){
+  let n=localStorage.getItem('chashan_player_name');
+  if(!n){
+    n='茶友'+Math.floor(Math.random()*9000+1000);
+    localStorage.setItem('chashan_player_name',n);
+  }
+  return n;
+}
+
+function fetchRankList(cb){
+  try{
+    const xhr=new XMLHttpRequest();
+	xhr.open('GET',RANK_API,true);
+    xhr.timeout=8000;
+    xhr.onload=function(){
+      try{
+        const data=JSON.parse(xhr.responseText);
+        cb(Array.isArray(data.list)?data.list:[]);
+      }catch(e){cb(null);}
+    };
+    xhr.onerror=function(){cb(null);};
+    xhr.ontimeout=function(){cb(null);};
+    xhr.send();
+  }catch(e){cb(null);}
+}
+
+let lastSubmit=0;
+function submitScore(){
+  const now=Date.now();
+  if(now-lastSubmit<5000)return; // 冷却时间缩短，方便测试
+  lastSubmit=now;
+  const name=getPlayerName();
+  const score=S.bestWave;
+  if(score<1)return;
+  fetchRankList(function(list){
+    // 核心修复：就算拉取失败、或者云端是空的，也不要放弃，直接当成空数组处理！
+    if(!list || !Array.isArray(list)) list = []; 
+    const idx=list.findIndex(function(r){return r.name===name;});
+    if(idx>=0){
+      if(score>list[idx].score){list[idx].score=score;list[idx].ts=Date.now();}
+    }else{
+      list.push({name:name,score:score,ts:Date.now()});
+    }
+    list.sort(function(a,b){return b.score-a.score;});
+    const top=list.slice(0,100);
+    // 强制提交并打印日志
+ fetch(RANK_API, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({list:top})
+    })
+    .then(function(res){
+      if(res.ok){
+        console.log('✅ 真正存入云端成功！状态码:', res.status);
+      }else{
+        console.error('❌ 服务器拒绝请求，状态码:', res.status);
+      }
+    })
+    .catch(function(err){
+      console.error('❌ 网络彻底断了，或者被浏览器跨域拦截了！', err);
+    });
+  });
+}
+
+function openRank(){
+  openModal('<h3>🏅 茶山排行榜</h3><p class="tip">正在加载…</p>');
+  fetchRankList(function(list){
+    if(list===null){
+      openModal('<h3>🏅 茶山排行榜</h3>'+
+        '<p class="tip" style="color:#c9182b">网络连接失败，请检查网络后重试</p>'+
+        '<button type="button" class="btn-main" id="rankRetry">重试</button>');
+      const rb=document.getElementById('rankRetry');
+      if(rb)rb.addEventListener('click',openRank);
+      return;
+    }
+    const myName=getPlayerName();
+    const sorted=list.slice().sort(function(a,b){return b.score-a.score;});
+    let html='<h3>🏅 茶山排行榜</h3>'+
+      '<p class="tip">你在排行榜中的名字：<b style="color:#c9a227">'+myName+'</b> <button type="button" id="rankRename" style="border:none;background:#e2e9e0;color:#5a6b5c;border-radius:8px;padding:3px 8px;font-size:11px;cursor:pointer;margin-left:6px">改名</button></p>';
+    if(sorted.length===0){
+      html+='<p class="tip" style="text-align:center;padding:20px 0">还没有人上榜，快去闯关吧！</p>';
+    }else{
+      sorted.forEach(function(r,i){
+        const medal=['🥇','🥈','🥉'][i]||(i+1);
+        const me=(r.name===myName);
+        html+='<div class="rank-item'+(me?' me':'')+'">'+
+          '<div class="rank-no">'+medal+'</div>'+
+          '<div class="rank-name">'+r.name+(me?' <span style="color:#c9a227;font-size:10px">(我)</span>':'')+'</div>'+
+          '<div>第 '+r.score+' 波</div>'+
+        '</div>';
+      });
+    }
+    html+='<p class="tip" style="margin-top:12px;text-align:center">数据来自所有玩家，实时共享</p>';
+    openModal(html);
+    const rn=document.getElementById('rankRename');
+    if(rn)rn.addEventListener('click',renamePlayer);
+  });
+}
+
+function renamePlayer(){
+  const cur=getPlayerName();
+  openModal('<h3>✏️ 修改名字</h3>'+
+    '<p class="tip">1~8 个字，可以用中文、字母、数字</p>'+
+    '<input type="text" id="nameInput" value="'+cur+'" maxlength="8" style="width:100%;padding:12px;border-radius:12px;border:1px solid #d8e5da;font-size:14px;color:#3a5544;background:#fff;margin-bottom:12px" />'+
+    '<div style="display:flex;gap:8px">'+
+      '<button type="button" class="btn-main" id="nameSave" style="flex:1;padding:12px;font-size:13px;margin-top:0">保存</button>'+
+      '<button type="button" class="btn-main" id="nameCancel" style="flex:1;padding:12px;font-size:13px;margin-top:0;background:#e2e9e0;color:#5a6b5c;box-shadow:none">取消</button>'+
+    '</div>');
+  document.getElementById('nameCancel').addEventListener('click',openRank);
+  document.getElementById('nameSave').addEventListener('click',function(){
+    const inp=document.getElementById('nameInput');
+    const v=(inp.value||'').trim();
+    if(v.length<1){toast('名字不能为空');return;}
+    localStorage.setItem('chashan_player_name',v);
+    submitScore();
+    toast('名字已保存');
+    openRank();
+  });
+}
+
+function equipCost(k){const e=EQUIPS[k];return e.base+e.inc*S.equip[k];}
+
+function openShop(){
+  let html='<h3>🎒 商店 · 装备</h3><p class="tip">当前茶叶：<b>'+S.tea+'</b> 🍃</p>';
+  Object.keys(EQUIPS).forEach(function(k){
+    const e=EQUIPS[k];
+    const lv=S.equip[k];
+    const cost=equipCost(k);
+    html+='<div class="shop-item">'+
+      '<div class="shop-icon">'+e.icon+'</div>'+
+      '<div class="shop-info">'+
+        '<b>'+e.name+' <span style="color:#c9a227">Lv.'+lv+'</span></b>'+
+        '<p>'+e.desc+'</p>'+
+      '</div>'+
+      '<button type="button" class="shop-buy" data-eq="'+k+'"'+(S.tea>=cost?'':' disabled')+'>'+cost+'🍃</button>'+
+    '</div>';
+  });
+  openModal(html);
+  modalBody.querySelectorAll('.shop-buy[data-eq]').forEach(function(btn){
+    btn.addEventListener('click',function(){buyEquip(btn.dataset.eq);});
+  });
+}
+function buyEquip(k){
+  const cost=equipCost(k);
+  if(S.tea<cost){toast('茶叶不足');return;}
+  S.tea-=cost;
+  S.equip[k]++;
+  toast(EQUIPS[k].name+' 升级到 Lv.'+S.equip[k]);
+  save();
+  openShop();
+  refreshUI();
+  renderHand();
+}
+
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+function openSign(){
+  const signed=S.lastSign===todayKey();
+  const rewards=[10,15,20,25,30,40,80];
+  const streak=S.signStreak%7;
+  let html='<h3>📅 每日签到</h3><p class="tip">连续签到奖励更丰厚，第 7 天送 80 茶叶</p><div class="sign-grid">';
+  for(let i=0;i<7;i++){
+    const done=i<streak;
+    html+='<div class="sign-day'+(done?' done':'')+'">'+
+      '<span>'+(done?'✓':'🍃')+'</span>第'+(i+1)+'天<br>'+rewards[i]+
+    '</div>';
+  }
+  html+='</div>';
+  if(signed){
+    html+='<button type="button" class="btn-main" disabled>今日已签到</button>';
+  }else{
+    html+='<button type="button" class="btn-main" id="doSignBtn">签到领 '+rewards[streak]+' 茶叶</button>';
+  }
+  openModal(html);
+  const sb=document.getElementById('doSignBtn');
+  if(sb)sb.addEventListener('click',doSign);
+}
+function doSign(){
+  const k=todayKey();
+  if(S.lastSign===k){toast('今天已经签过啦');return;}
+  const rewards=[10,15,20,25,30,40,80];
+  const gain=rewards[S.signStreak%7];
+  S.tea+=gain;
+  S.signStreak++;
+  S.lastSign=k;
+  toast('签到成功！获得 '+gain+' 茶叶');
+  save();
+  openSign();
+  refreshUI();
+}
+
+/* ---------- 全局刷新 ---------- */
+function refreshUI(){
+  $$('.tea-val').forEach(function(e){e.textContent=S.tea;});
+  const ht=$('#homeTea');if(ht)ht.textContent=S.tea;
+  const hb=$('#homeBest');if(hb)hb.textContent=S.bestWave;
+  const hl=$('#houseLv');if(hl)hl.textContent=S.houseLevel;
+  const hbar=$('#houseBar');if(hbar)hbar.style.width=(S.houseProg*10)+'%';
+  const wn=$('#waveNum');if(wn)wn.textContent=TD.wave;
+const wkn=$('#waveKillNum');if(wkn)wkn.textContent=TD.waveKills||0;
+const wtn=$('#waveTargetNum');if(wtn)wtn.textContent=TD.waveTarget||8;
+  const bh=$('#baseHp');if(bh)bh.textContent=Math.max(0,TD.baseHp);
+
+	const bfm=$('#btnFestMission');
+  if(bfm){
+    const cf=activeFestival();
+    if(TD.festMission.active){
+      bfm.textContent='🎊 任务中 '+TD.festMission.kills+'/'+TD.festMission.target;
+      bfm.style.background='linear-gradient(135deg,#c9182b,#7a1010)';
+    }else if(cf&&S.unlockedFests[cf.id]){
+      bfm.textContent='🎊 开启「'+cf.name+'」专属任务';
+      bfm.style.background='linear-gradient(135deg,#e6a020,#c9182b)';
+    }else{
+      bfm.textContent='🎊 节日任务（未开放）';
+      bfm.style.background='#bbb';
+    }
+  }
+
+  const un=$('#unitNum');
+  if(un)un.textContent=TD.slots.filter(function(s){return s&&s.unit;}).length;
+
+  const fest=activeFestival();
+  const mt=$('#mtTitle');
+  if(mt){
+    let title='第一站 · 云雾茶山';
+    if(fest&&S.unlockedFests[fest.id])title+='<span class="fest-badge">'+fest.name+'</span>';
+    const hasMyth=TD.slots.some(function(s){
+      return s&&s.unit&&MYTH_CHARS.indexOf(s.unit.char)>=0;
+    });
+    if(hasMyth)title+='<span class="myth-badge">仙临</span>';
+    mt.innerHTML=title;
+  }
+
+  const fc=$('#festChip');
+  if(fc){
+    if(fest&&S.unlockedFests[fest.id]){
+      fc.style.display='';
+      fc.textContent=fest.emoji+' '+fest.name+' · 收益+50%';
+    }else if(fest){
+      fc.style.display='';
+      fc.textContent=fest.emoji+' '+fest.name+' · 集字解锁';
+    }else{
+      fc.style.display='none';
+    }
+  }
+}
+
+/* ---------- 主循环 ---------- */
+let houseAcc=0;
+
+setInterval(function(){
+  /* 茶树冷却 */
+trees.forEach(function(t){
+    if(t.cd>0){
+      t.cd-=0.1;
+      const cd=t.el.querySelector('.cd');
+      if(cd)cd.style.opacity=Math.min(1,t.cd/TREE_CD);
+      if(t.cd<=0){
+        t.cd=0;
+        t.el.classList.remove('cool');
+        t.leaves=8;
+        if(cd)cd.style.opacity=0;
+      }
+    }
+  });
+
+  /* 茶楼自动产茶 */
+  if(S.houseLevel>0){
+    houseAcc+=0.1;
+    if(houseAcc>=1){
+      houseAcc-=1;
+		S.tea += S.houseLevel + 2 * getTalentCount('永恒之火');
+      refreshUI();
+      save();
+    }
+  }
+
+  /* 女娲催熟：每 6 秒一次 */
+  const hasNuwa=TD.slots.some(function(s){
+    return s&&s.unit&&s.unit.char==='娲';
+  });
+  if(TD.active&&hasNuwa){
+    nuwaAcc+=0.1;
+    if(nuwaAcc>=6){nuwaAcc=0;triggerNuwa();}
+  }else{
+    nuwaAcc=0;
+  }
+
+/* 塔防 */
+  if(TD.active){
+    TD.spawnT-=0.1;
+    TD.spawnT-=0.1;
+    if(TD.spawnT<=0){
+      if((TD.waveSpawned||0)<TD.waveTarget){
+        spawnMonster();
+        TD.waveSpawned=(TD.waveSpawned||0)+1;
+        if(TD.waveSpawned%10===0){
+          TD.spawnT=1.8;
+        }else{
+          TD.spawnT=0.15;
+        }
+      }else{
+        TD.spawnT=0.6;
+      }
+    }
+
+    for(let i=TD.monsters.length-1;i>=0;i--){
+      const m=TD.monsters[i];
+      if(m.dead){TD.monsters.splice(i,1);continue;}
+      if(m.slowT>0)m.slowT-=0.1;
+      else{
+        m.progress+=m.speed*0.13;
+        updateMonsterPosition(m);
+      }
+      if(m.progress>=PATH.length-1)leakMonster(m);
+    }
+
+
+    /* 技能触发 */
+    TD.slots.forEach(function(slot){
+      if(!slot||!slot.unit)return;
+      const def=UNIT_DEFS[slot.unit.char];
+      if(!def||!def.sk)return;
+      slot.unit.skillT=(slot.unit.skillT||0)+0.1;
+if(slot.unit.skillT >= (def.sk * Math.max(0.4, 1 - 0.1 * getTalentCount('技能强化')))){
+        slot.unit.skillT=0;
+        triggerSkill(slot);
+      }
+      if(slot.unit.buffFastT>0)slot.unit.buffFastT-=0.1;
+      if(slot.unit.buffDmgT>0)slot.unit.buffDmgT-=0.1;
+    });
+
+    TD.slots.forEach(function(slot){
+      if(!slot||!slot.unit)return;
+      const def=UNIT_DEFS[slot.unit.char];
+      if(!def||def.type==='heal'||def.type==='mature')return;
+      slot.unit.cd-=0.1;
+      if(slot.unit.cd>0)return;
+      const gridRange=def.range/10;
+      const target=TD.monsters.find(function(m){
+        if(m.dead)return false;
+        const dr=m.row-slot.row, dc=m.col-slot.col;
+        return Math.sqrt(dr*dr+dc*dc)<=gridRange;
+      });
+		if(target)SFX.attack();
+      if(target){
+        slot.unit.cd=(slot.unit.buffFastT>0)?(1/(def.rate*(1+0.15*getTalentCount('速攻节奏')))/2):(1/def.rate);
+        let finalDmg=unitDamage(slot.unit, target);
+        if(slot.unit.heavyHit){finalDmg*=2;slot.unit.heavyHit=false;}
+fireProjectile(slot,target,def);
+if(def.type==='aoe'){
+          TD.monsters.filter(function(m){
+            if(m.dead)return false;
+            const dr=m.row-target.row, dc=m.col-target.col;
+            return Math.sqrt(dr*dr+dc*dc)<1.5;
+          }).forEach(function(m){damageMonster(m,finalDmg);});
+        }else if(def.type==='slow'){
+          damageMonster(target,finalDmg,'#6ab8ff');
+          target.slowT=1.5;
+        }else if(def.type==='crit'){
+          const crit=Math.random()<0.3;
+          damageMonster(target,finalDmg*(crit?(3+0.5*getTalentCount('暴击之心')):1),crit?'#e6a020':null);
+        }else{
+          damageMonster(target,finalDmg);
+        }
+      }
+    });
+
+    TD.slots.forEach(function(slot){
+      if(!slot||!slot.unit)return;
+      const def=UNIT_DEFS[slot.unit.char];
+      if(!def||def.type!=='heal')return;
+      slot.unit.cd-=0.1;
+      if(slot.unit.cd>0)return;
+      slot.unit.cd=1/def.rate;
+      if(TD.baseHp<10){
+        TD.baseHp=Math.min(10,TD.baseHp+unitHeal(slot.unit));
+        refreshUI();
+      }
+    });
+  }
+},100);
+
+/* ---------- 绑定所有按钮（替代内联 onclick） ---------- */
+function bindUI(){
+  const btnStart=$('#btnStart');
+  if(btnStart)btnStart.addEventListener('click',startGame);
+
+const btnAdventure=$('#btnAdventure');
+  if(btnAdventure)btnAdventure.addEventListener('click',openAdventure);
+  const btnBackFromLevels=$('#btnBackFromLevels');
+  if(btnBackFromLevels)btnBackFromLevels.addEventListener('click',function(){go('screen-home');});
+
+
+  const btnRank=$('#btnRank');
+  if(btnRank)btnRank.addEventListener('click',openRank);
+  const btnShop=$('#btnShop');
+  if(btnShop)btnShop.addEventListener('click',openShop);
+  const btnSign=$('#btnSign');
+  if(btnSign)btnSign.addEventListener('click',openSign);
+  const btnBag=$('#btnBag');
+  if(btnBag)btnBag.addEventListener('click',openBag);
+
+const btnReset=$('#btnReset');
+  if(btnReset)btnReset.addEventListener('click',confirmReset);
+  const btnSave=$('#btnSave');
+  const btnEvo=$('#btnEvo');
+  if(btnEvo)btnEvo.addEventListener('click',openEvo);
+  const btnBackFromEvo=$('#btnBackFromEvo');
+  if(btnBackFromEvo)btnBackFromEvo.addEventListener('click',function(){go('screen-home');});
+if(btnSave)btnSave.addEventListener('click',openSaveCode);
+
+
+  const btnBackHome=$('#btnBackHome');
+  if(btnBackHome)btnBackHome.addEventListener('click',function(){go('screen-home');});
+  const btnBackMountain=$('#btnBackMountain');
+  if(btnBackMountain)btnBackMountain.addEventListener('click',function(){go('screen-mountain');});
+  const btnToPath=$('#btnToPath');
+ if(btnToPath)btnToPath.addEventListener('click',function(){
+    TD.levelConfig=null;
+    TD.curChapter='lake';
+    clearMonsters();
+    go('screen-path');
+  });
+
+const btnManualSave=$('#btnManualSave');
+  if(btnManualSave)btnManualSave.addEventListener('click',manualSave);
+  const btnBackHome2=$('#btnBackHome2');
+  if(btnBackHome2)btnBackHome2.addEventListener('click',backToHome);
+
+
+	const btnFestMission=$('#btnFestMission');
+  if(btnFestMission)btnFestMission.addEventListener('click',startFestMission);
+
+
+  const houseBox=$('#houseBox');
+  if(houseBox)houseBox.addEventListener('click',investHouse);
+
+  const btnCloseModal=$('#btnCloseModal');
+  if(btnCloseModal)btnCloseModal.addEventListener('click',closeModal);
+
+  /* 点击遮罩关闭弹窗 */
+  modal.addEventListener('click',function(e){
+    if(e.target===modal)closeModal();
+  });
+}
+
+/* ---------- 启动 ---------- */
+bindUI();
+load();
+initTrees();
+refreshUI();
+save();
+
+/* ---------- 自检 ---------- */
+window.addEventListener('load',function(){
+  const ok=[
+    typeof startGame==='function',
+    typeof openRank==='function',
+    typeof pickTea==='function',
+    typeof clickSlot==='function'
+  ].every(Boolean);
+  console.log('[茶山奇遇] 初始化'+(ok?'成功 ✅':'失败 ❌'));
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+</body>
+</html>
