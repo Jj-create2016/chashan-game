@@ -390,6 +390,10 @@ h1{font-size:28px;letter-spacing:6px;margin:12px 0 3px;text-shadow:0 3px 12px rg
   box-shadow:0 2px 8px rgba(0,0,0,.1)}
 .hp-bar b{color:#c9182b}
 </style>
+<script type="module">
+  import { EpicLeaderboard, Timeframe } from 'https://unpkg.com/epicleaderboard-ts/dist/esm/index.js';
+  window.EpicLeaderboardSDK = { EpicLeaderboard, Timeframe };
+</script>
 </head>
 <body>
 <div id="phone">
@@ -2880,43 +2884,46 @@ function fetchRankList(cb){
 }
 
 let lastSubmit=0;
-function submitScore(){
-  const now=Date.now();
-  if(now-lastSubmit<5000)return; // 冷却时间缩短，方便测试
-  lastSubmit=now;
-  const name=getPlayerName();
-  const score=S.bestWave;
-  if(score<1)return;
-  fetchRankList(function(list){
-    // 核心修复：就算拉取失败、或者云端是空的，也不要放弃，直接当成空数组处理！
-    if(!list || !Array.isArray(list)) list = []; 
-    const idx=list.findIndex(function(r){return r.name===name;});
-    if(idx>=0){
-      if(score>list[idx].score){list[idx].score=score;list[idx].ts=Date.now();}
-    }else{
-      list.push({name:name,score:score,ts:Date.now()});
+async function submitScore(){
+  const now = Date.now();
+  if(now - lastSubmit < 5000) return;
+  lastSubmit = now;
+  const name = getPlayerName();
+  const score = S.bestWave;
+  if(score < 1) return;
+
+  const { EpicLeaderboard, Timeframe } = window.EpicLeaderboardSDK;
+  const client = new EpicLeaderboard();
+  // 请确保这里的 ID 和 Key 是你最新截图里的：
+  const game = { gameID: '42b8623b32f75854557494df', gameKey: '3ba9c5e88e8' };
+  const leaderboard = { primaryID: 'main', secondaryID: '' };
+
+  try {
+    await client.submitLeaderboardEntry(game, leaderboard, name, score);
+    console.log('✅ 分数已提交到 EpicLeaderboard！');
+    toast('✅ 分数已成功上传！');
+  } catch (error) {
+    console.error('❌ 提交失败:', error);
+    // 提取具体的错误原因
+    let errMsg = '网络连接失败或服务器拒绝';
+    if (error && error.message) {
+      errMsg = error.message;
+    } else if (typeof error === 'string') {
+      errMsg = error;
     }
-    list.sort(function(a,b){return b.score-a.score;});
-    const top=list.slice(0,100);
-    // 强制提交并打印日志
- fetch(RANK_API, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({list:top})
-    })
-    .then(function(res){
-      if(res.ok){
-        console.log('✅ 真正存入云端成功！状态码:', res.status);
-      }else{
-        console.error('❌ 服务器拒绝请求，状态码:', res.status);
-      }
-    })
-    .catch(function(err){
-      console.error('❌ 网络彻底断了，或者被浏览器跨域拦截了！', err);
-    });
-  });
+    
+    // 直接在屏幕上弹出具体错误，让你看个明白！
+    openModal(
+      '<div class="celebrate">' +
+        '<div class="big">❌</div>' +
+        '<h3>提交失败，错误原因：</h3>' +
+        '<p style="color:#c9182b;word-break:break-all;font-size:12px;background:#fff;padding:10px;border-radius:10px;text-align:left">' + errMsg + '</p>' +
+        '<button type="button" class="btn-main" id="errCloseBtn">我知道了</button>' +
+      '</div>'
+    );
+    const btn = document.getElementById('errCloseBtn');
+    if(btn) btn.addEventListener('click', closeModal);
+  }
 }
 
 function openRank(){
