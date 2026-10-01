@@ -392,9 +392,12 @@ h1{font-size:28px;letter-spacing:6px;margin:12px 0 3px;text-shadow:0 3px 12px rg
 </style>
 <script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.10.11/cloudbase.full.js"></script>
 <script>
-  // 初始化腾讯云环境
-  const app = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' });
-  const db = app.database();
+  // 游戏加载时，第一件事就是连上腾讯云！
+  window.addEventListener('DOMContentLoaded', function() {
+    window.app = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' });
+    window.db = window.app.database();
+    console.log('✅ 腾讯云数据库连接成功！');
+  });
 </script>
 </head>
 <body>
