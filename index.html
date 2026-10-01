@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.10.11/cloudbase.full.js"></script>
+<script>
+  // 直接初始化，不需要 DOMContentLoaded，立刻执行
+  window.db = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' }).database();
+  console.log('✅ 腾讯云数据库已连接！');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>茶山奇遇 · 一叶一山河</title>
@@ -2894,6 +2900,7 @@ function fetchRankList(cb){
 
 let lastSubmit=0;
 async function submitScore(){
+	if (!window.db) { console.error('db未初始化'); return; }
   const now = Date.now();
   if(now - lastSubmit < 5000) return;
   lastSubmit = now;
@@ -2922,6 +2929,7 @@ async function submitScore(){
 }
 
 async function openRank(){
+	if (!window.db) { console.error('db未初始化'); return; }
   const myName = getPlayerName();
   openModal('<h3>🏅 茶山排行榜</h3><p class="tip">正在加载…</p>');
 
