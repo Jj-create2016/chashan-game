@@ -394,12 +394,16 @@ h1{font-size:28px;letter-spacing:6px;margin:12px 0 3px;text-shadow:0 3px 12px rg
 <script>
   // 游戏加载时，第一件事就是连上腾讯云！
   window.addEventListener('DOMContentLoaded', function() {
-    window.app = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' });
-    window.db = window.app.database();
-    console.log('✅ 腾讯云数据库连接成功！');
+    try {
+      window.app = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' });
+      window.db = window.app.database();
+      console.log('✅ 腾讯云数据库连接成功！');
+    } catch(e) {
+      console.error('❌ 腾讯云初始化失败:', e);
+    }
   });
 </script>
-</head>
+</head>>
 <body>
 <div id="phone">
 
