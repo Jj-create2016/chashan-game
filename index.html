@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.10.11/cloudbase.full.js"></script>
-<head>
-
+<script src="https://cdn.jsdelivr.net/npm/@cloudbase/js-sdk@1.10.11/dist/cloudbase.full.js"></script>
+<script>
+  // 游戏加载时，第一件事就是连上腾讯云！
+  window.addEventListener('DOMContentLoaded', function() {
+    try {
+      window.app = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' });
+      window.db = window.app.database();
+      console.log('✅ 腾讯云数据库连接成功！');
+    } catch(e) {
+      console.error('❌ 腾讯云初始化失败:', e);
+    }
+  });
+</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="...">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>茶山奇遇 · 一叶一山河</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
