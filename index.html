@@ -2900,6 +2900,10 @@ function fetchRankList(cb){
 
 let lastSubmit=0;
 async function submitScore(){
+  if (!window.app) {
+    toast('本地环境不支持云端，请去线上网址测试！');
+    return;
+  }
   const now = Date.now();
   if(now - lastSubmit < 5000) return;
   lastSubmit = now;
@@ -2922,12 +2926,13 @@ async function submitScore(){
     console.error('❌ 提交失败:', error);
     toast('❌ 提交失败: ' + (error.message || '网络问题'));
   }
-	if (!window.app) {
-    return alert('云端SDK未加载（本地环境通常不支持），请去线上网址测试！');
-  }
 }
 
 async function openRank(){
+  if (!window.app) {
+    toast('本地环境不支持云端，请去线上网址测试！');
+    return;
+  }
   const myName = getPlayerName();
   openModal('<h3>🏅 茶山排行榜</h3><p class="tip">正在加载…</p>');
 
@@ -2958,9 +2963,6 @@ async function openRank(){
   } catch (error) {
     console.error('❌ 获取排行榜失败:', error);
     openModal('<h3>🏅 茶山排行榜</h3><p class="tip" style="color:#c9182b">加载失败: ' + (error.message || '网络问题') + '</p>');
-  }
-	if (!window.app) {
-    return alert('云端SDK未加载（本地环境通常不支持），请去线上网址测试！');
   }
 }
 
