@@ -2899,42 +2899,69 @@ function fetchRankList(cb){
 }
 
 let lastSubmit=0;
-function submitScore(){
-  console.log('本地排行榜已记录，当前波次：', S.bestWave);
+async function submitScore(){
+  const now = Date.now();
+  if(now - lastSubmit < 5000) return;
+  lastSubmit = now;
+  const name = getPlayerName();
+  const score = S.bestWave;
+  if(score < 1) return;
+
+  try {
+    const res = await window.app.callFunction({
+      name: 'submitScore',
+      data: { name: name, score: score }
+    });
+    if (res.result.code === 0) {
+      console.log('✅ 分数已提交到云端！');
+      toast('✅ 分数已成功上传！');
+    } else {
+      toast('❌ 提交失败: ' + res.result.msg);
+    }
+  } catch (error) {
+    console.error('❌ 提交失败:', error);
+    toast('❌ 提交失败: ' + (error.message || '网络问题'));
+  }
+	if (!window.app) {
+    return alert('云端SDK未加载（本地环境通常不支持），请去线上网址测试！');
+  }
 }
 
-function openRank(){
-  let list = [
-    {name:'茶山老农',score:32},{name:'一叶知秋',score:24},
-    {name:'云湖钓叟',score:18},{name:'瀑边小茶',score:12},{name:'森林拾光',score:8}
-  ];
-  
+async function openRank(){
   const myName = getPlayerName();
-  const myScore = S.bestWave || 0;
-  
-  if(myScore >= 1){
-    list = list.filter(item => item.name !== myName);
-    list.push({name: myName, score: myScore});
-    list.sort((a,b) => b.score - a.score);
-  }
-  
-  let html='<h3>🏅 茶山排行榜</h3>'+
-    '<p class="tip">你在排行榜中的名字：<b style="color:#c9a227">'+myName+'</b> <button type="button" id="rankRename" style="border:none;background:#e2e9e0;color:#5a6b5c;border-radius:8px;padding:3px 8px;font-size:11px;cursor:pointer;margin-left:6px">改名</button></p>';
+  openModal('<h3>🏅 茶山排行榜</h3><p class="tip">正在加载…</p>');
+
+  try {
+    const res = await window.app.callFunction({ name: 'getRank' });
+    const sorted = res.result.data || [];
     
-  list.forEach(function(r,i){
-    const medal=['🥇','🥈','🥉'][i]||(i+1);
-    const me=(r.name===myName);
-    html+='<div class="rank-item'+(me?' me':'')+'">'+
-      '<div class="rank-no">'+medal+'</div>'+
-      '<div class="rank-name">'+r.name+(me?' <span style="color:#c9a227;font-size:10px">(我)</span>':'')+'</div>'+
-      '<div>第 '+r.score+' 波</div>'+
-    '</div>';
-  });
-  html+='<p class="tip" style="margin-top:12px;text-align:center">数据已保存在本地，记录你的每一次突破</p>';
-  openModal(html);
-  
-  const rn=document.getElementById('rankRename');
-  if(rn)rn.addEventListener('click',renamePlayer);
+    let html = '<h3>🏅 茶山排行榜</h3>' +
+      '<p class="tip">你在排行榜中的名字：<b style="color:#c9a227">' + myName + '</b> <button type="button" id="rankRename" style="border:none;background:#e2e9e0;color:#5a6b5c;border-radius:8px;padding:3px 8px;font-size:11px;cursor:pointer;margin-left:6px">改名</button></p>';
+
+    if(sorted.length === 0){
+      html += '<p class="tip" style="text-align:center;padding:20px 0">还没有人上榜，快去闯关吧！</p>';
+    }else{
+      sorted.forEach(function(r, i){
+        const medal = ['🥇','🥈','🥉'][i] || (i+1);
+        const me = (r.name === myName);
+        html += '<div class="rank-item' + (me ? ' me' : '') + '">' +
+          '<div class="rank-no">' + medal + '</div>' +
+          '<div class="rank-name">' + r.name + (me ? ' <span style="color:#c9a227;font-size:10px">(我)</span>' : '') + '</div>' +
+          '<div>第 ' + r.score + ' 波</div>' +
+        '</div>';
+      });
+    }
+    html += '<p class="tip" style="margin-top:12px;text-align:center">数据来自云端，实时共享</p>';
+    openModal(html);
+    const rn = document.getElementById('rankRename');
+    if(rn) rn.addEventListener('click', renamePlayer);
+  } catch (error) {
+    console.error('❌ 获取排行榜失败:', error);
+    openModal('<h3>🏅 茶山排行榜</h3><p class="tip" style="color:#c9182b">加载失败: ' + (error.message || '网络问题') + '</p>');
+  }
+	if (!window.app) {
+    return alert('云端SDK未加载（本地环境通常不支持），请去线上网址测试！');
+  }
 }
 
 function renamePlayer(){
