@@ -1,25 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.10.11/cloudbase.full.js"></script>
 <script>
-  // 游戏加载时，第一件事就是连上腾讯云！
-  window.addEventListener('DOMContentLoaded', function() {
-    try {
-      window.app = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' });
-      window.db = window.app.database();
-      console.log('✅ 腾讯云数据库连接成功！');
-    } catch(e) {
-      console.error('❌ 腾讯云初始化失败:', e);
-    }
-  });
+  // 🌐 你的 Cloudflare Worker API 代理地址
+  window.RANK_API = 'https://chashan-api.15510137728.workers.dev';
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>茶山奇遇 · 一叶一山河</title>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>茶山奇遇 · 一叶一山河</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
@@ -407,19 +396,8 @@ h1{font-size:28px;letter-spacing:6px;margin:12px 0 3px;text-shadow:0 3px 12px rg
 .hp-bar b{color:#c9182b}
 </style>
 <script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.10.11/cloudbase.full.js"></script>
-<script>
-  // 游戏加载时，第一件事就是连上腾讯云！
-  window.addEventListener('DOMContentLoaded', function() {
-    try {
-      window.app = cloudbase.init({ env: 'chashan-d5g02jdbcc1d5e1be' });
-      window.db = window.app.database();
-      console.log('✅ 腾讯云数据库连接成功！');
-    } catch(e) {
-      console.error('❌ 腾讯云初始化失败:', e);
-    }
-  });
-</script>
-</head>>
+
+</head>
 <body>
 <div id="phone">
 
@@ -2891,29 +2869,8 @@ function getPlayerName(){
   return n;
 }
 
-function fetchRankList(cb){
-  try{
-    const xhr=new XMLHttpRequest();
-	xhr.open('GET',RANK_API,true);
-    xhr.timeout=8000;
-    xhr.onload=function(){
-      try{
-        const data=JSON.parse(xhr.responseText);
-        cb(Array.isArray(data.list)?data.list:[]);
-      }catch(e){cb(null);}
-    };
-    xhr.onerror=function(){cb(null);};
-    xhr.ontimeout=function(){cb(null);};
-    xhr.send();
-  }catch(e){cb(null);}
-}
-
-let lastSubmit=0;
+let lastSubmit = 0;
 async function submitScore(){
-  if (!window.app) {
-    toast('本地环境不支持云端，请去线上网址测试！');
-    return;
-  }
   const now = Date.now();
   if(now - lastSubmit < 5000) return;
   lastSubmit = now;
@@ -2922,15 +2879,17 @@ async function submitScore(){
   if(score < 1) return;
 
   try {
-    const res = await window.app.callFunction({
-      name: 'submitScore',
-      data: { name: name, score: score }
+    const res = await fetch(window.RANK_API + '/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, score: score })
     });
-    if (res.result.code === 0) {
+    const data = await res.json();
+    if (data && data.code === 0) {
       console.log('✅ 分数已提交到云端！');
       toast('✅ 分数已成功上传！');
     } else {
-      toast('❌ 提交失败: ' + res.result.msg);
+      toast('❌ 提交失败: ' + (data && data.msg || '未知错误'));
     }
   } catch (error) {
     console.error('❌ 提交失败:', error);
@@ -2939,23 +2898,20 @@ async function submitScore(){
 }
 
 async function openRank(){
-  if (!window.app) {
-    toast('本地环境不支持云端，请去线上网址测试！');
-    return;
-  }
   const myName = getPlayerName();
   openModal('<h3>🏅 茶山排行榜</h3><p class="tip">正在加载…</p>');
 
   try {
-    const res = await window.app.callFunction({ name: 'getRank' });
-    const sorted = res.result.data || [];
-    
+    const res = await fetch(window.RANK_API + '/rank');
+    const data = await res.json();
+    const sorted = (data && data.list) || [];
+
     let html = '<h3>🏅 茶山排行榜</h3>' +
       '<p class="tip">你在排行榜中的名字：<b style="color:#c9a227">' + myName + '</b> <button type="button" id="rankRename" style="border:none;background:#e2e9e0;color:#5a6b5c;border-radius:8px;padding:3px 8px;font-size:11px;cursor:pointer;margin-left:6px">改名</button></p>';
 
     if(sorted.length === 0){
       html += '<p class="tip" style="text-align:center;padding:20px 0">还没有人上榜，快去闯关吧！</p>';
-    }else{
+    } else {
       sorted.forEach(function(r, i){
         const medal = ['🥇','🥈','🥉'][i] || (i+1);
         const me = (r.name === myName);
