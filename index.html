@@ -2888,7 +2888,8 @@ async function submitScore(){
     const getRes = await fetch(url);
     const fileData = await getRes.json();
     const sha = fileData.sha;
-    const oldContent = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+const cleanBase64 = fileData.content.replace(/[\n\r\s]/g, '');
+const oldContent = JSON.parse(decodeURIComponent(escape(atob(cleanBase64))));
     
     // 2. 更新分数
     let list = oldContent.list || [];
@@ -2937,7 +2938,8 @@ async function openRank(){
   try {
     const res = await fetch(url);
     const fileData = await res.json();
-    const contentObj = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+const cleanBase64 = fileData.content.replace(/[\n\r\s]/g, '');
+const contentObj = JSON.parse(decodeURIComponent(escape(atob(cleanBase64))));
     const sorted = (contentObj.list || []).sort((a,b) => b.score - a.score);
 
     let html = '<h3>🏅 茶山排行榜</h3>' +
