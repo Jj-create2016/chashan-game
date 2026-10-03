@@ -2887,11 +2887,19 @@ async function submitScore(){
     // 1. 先获取当前数据
     const getRes = await fetch(url);
     const fileData = await getRes.json();
-    const sha = fileData.sha;
-const cleanBase64 = fileData.content.replace(/[\n\r\s]/g, '');
-const oldContent = JSON.parse(decodeURIComponent(escape(atob(cleanBase64))));
+
+    // ⚠️ 核心保险：如果 Gitee 返回了错误，或者没有 content，直接报错退出
+    if (!fileData || !fileData.content) {
+      console.error('❌ 获取 Gitee 数据失败，返回内容:', fileData);
+      toast('❌ 获取云端数据失败，请检查 Gitee 令牌');
+      return;
+    }
+
+    // 2. 清理 Gitee 返回数据里的换行符和空格（之前你已经改过这里了）
+    const cleanBase64 = fileData.content.replace(/[\n\r\s]/g, '');
+    const oldContent = JSON.parse(decodeURIComponent(escape(atob(cleanBase64))));
     
-    // 2. 更新分数
+    // 3. 更新分数
     let list = oldContent.list || [];
     let found = false;
     for(let i = 0; i < list.length; i++){
@@ -2904,7 +2912,7 @@ const oldContent = JSON.parse(decodeURIComponent(escape(atob(cleanBase64))));
     if(!found) list.push({ name: name, score: score });
     list.sort((a,b) => b.score - a.score);
 
-    // 3. 保存回云端
+    // 4. 保存回云端
     const newContent = btoa(unescape(encodeURIComponent(JSON.stringify({ list: list }))));
     const putRes = await fetch(`https://gitee.com/api/v5/repos/${window.GITEE_REPO}/contents/${window.GITEE_FILE}`, {
       method: 'PUT',
@@ -2913,7 +2921,7 @@ const oldContent = JSON.parse(decodeURIComponent(escape(atob(cleanBase64))));
         access_token: window.GITEE_TOKEN,
         content: newContent,
         message: 'update rank by player',
-        sha: sha
+        sha: fileData.sha // 注意这里直接用 fileData.sha
       })
     });
     
@@ -2921,10 +2929,12 @@ const oldContent = JSON.parse(decodeURIComponent(escape(atob(cleanBase64))));
       console.log('✅ 分数已提交到 Gitee 云端！');
       toast('✅ 分数已成功上传！');
     } else {
+      const errorMsg = await putRes.json();
+      console.error('❌ 提交失败，Gitee 返回:', errorMsg);
       toast('❌ 提交失败，权限可能不足');
     }
   } catch (error) {
-    console.error('❌ 提交失败:', error);
+    console.error('❌ 提交异常:', error);
     toast('❌ 提交失败: ' + (error.message || '网络问题'));
   }
 }
