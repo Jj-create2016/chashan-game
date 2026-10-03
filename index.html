@@ -3,7 +3,10 @@
 <head>
 <script>
   // 🌐 你的 Cloudflare Worker API 代理地址
-  window.RANK_API = 'https://chashan-api.15510137728.workers.dev';
+// Gitee 云端排行榜配置
+window.GITEE_TOKEN = '369c150740406ffe5559d5b1f87a9be4';
+window.GITEE_REPO = 'Jj_tea/chashan-rank';
+window.GITEE_FILE = 'rank.json';
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -2878,18 +2881,46 @@ async function submitScore(){
   const score = S.bestWave;
   if(score < 1) return;
 
+  const url = `https://gitee.com/api/v5/repos/${window.GITEE_REPO}/contents/${window.GITEE_FILE}?access_token=${window.GITEE_TOKEN}`;
+
   try {
-    const res = await fetch(window.RANK_API + '/submit', {
-      method: 'POST',
+    // 1. 先获取当前数据
+    const getRes = await fetch(url);
+    const fileData = await getRes.json();
+    const sha = fileData.sha;
+    const oldContent = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+    
+    // 2. 更新分数
+    let list = oldContent.list || [];
+    let found = false;
+    for(let i = 0; i < list.length; i++){
+      if(list[i].name === name){
+        if(score > list[i].score) list[i].score = score;
+        found = true;
+        break;
+      }
+    }
+    if(!found) list.push({ name: name, score: score });
+    list.sort((a,b) => b.score - a.score);
+
+    // 3. 保存回云端
+    const newContent = btoa(unescape(encodeURIComponent(JSON.stringify({ list: list }))));
+    const putRes = await fetch(`https://gitee.com/api/v5/repos/${window.GITEE_REPO}/contents/${window.GITEE_FILE}`, {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name, score: score })
+      body: JSON.stringify({
+        access_token: window.GITEE_TOKEN,
+        content: newContent,
+        message: 'update rank by player',
+        sha: sha
+      })
     });
-    const data = await res.json();
-    if (data && data.code === 0) {
-      console.log('✅ 分数已提交到云端！');
+    
+    if (putRes.ok) {
+      console.log('✅ 分数已提交到 Gitee 云端！');
       toast('✅ 分数已成功上传！');
     } else {
-      toast('❌ 提交失败: ' + (data && data.msg || '未知错误'));
+      toast('❌ 提交失败，权限可能不足');
     }
   } catch (error) {
     console.error('❌ 提交失败:', error);
@@ -2901,10 +2932,13 @@ async function openRank(){
   const myName = getPlayerName();
   openModal('<h3>🏅 茶山排行榜</h3><p class="tip">正在加载…</p>');
 
+  const url = `https://gitee.com/api/v5/repos/${window.GITEE_REPO}/contents/${window.GITEE_FILE}?access_token=${window.GITEE_TOKEN}`;
+
   try {
-    const res = await fetch(window.RANK_API + '/rank');
-    const data = await res.json();
-    const sorted = (data && data.list) || [];
+    const res = await fetch(url);
+    const fileData = await res.json();
+    const contentObj = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+    const sorted = (contentObj.list || []).sort((a,b) => b.score - a.score);
 
     let html = '<h3>🏅 茶山排行榜</h3>' +
       '<p class="tip">你在排行榜中的名字：<b style="color:#c9a227">' + myName + '</b> <button type="button" id="rankRename" style="border:none;background:#e2e9e0;color:#5a6b5c;border-radius:8px;padding:3px 8px;font-size:11px;cursor:pointer;margin-left:6px">改名</button></p>';
@@ -2922,7 +2956,7 @@ async function openRank(){
         '</div>';
       });
     }
-    html += '<p class="tip" style="margin-top:12px;text-align:center">数据来自云端，实时共享</p>';
+    html += '<p class="tip" style="margin-top:12px;text-align:center">数据来自 Gitee 云端，实时共享</p>';
     openModal(html);
     const rn = document.getElementById('rankRename');
     if(rn) rn.addEventListener('click', renamePlayer);
